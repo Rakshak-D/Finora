@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupTabs();
   setupAnalysePanel();
   setupPortfolioPanel();
-  setupSettingsPanel();
+  setupNewsPanel();
   checkBackendStatus();
 });
 
@@ -27,14 +27,28 @@ async function loadSettings() {
   });
 }
 
-function setupSettingsPanel() {
-  document.getElementById("apiUrlInput").value = apiUrl;
-  document.getElementById("saveSettingsBtn").addEventListener("click", () => {
-    apiUrl = document.getElementById("apiUrlInput").value.trim().replace(/\/$/, "");
-    chrome.storage.local.set({ apiUrl });
-    showMsg(document.getElementById("settingsMsg"), "info", "Settings Saved ✓");
-    checkBackendStatus();
-  });
+function setupNewsPanel() {
+  document.getElementById("refreshNewsBtn").addEventListener("click", loadNewsFeed);
+}
+
+async function loadNewsFeed() {
+  const list = document.getElementById("newsList");
+  list.innerHTML = `<div class="spinner" style="display:block"></div>`;
+  try {
+    const res = await fetch(`${apiUrl}/api/news?count=10`);
+    if (!res.ok) throw new Error("API failure");
+    const data = await res.json();
+
+    list.innerHTML = data.map(n => `
+      <div style="background:var(--surface2); padding:12px; border-radius:8px; border:1px solid var(--border);">
+        <div style="font-family:var(--display); font-size:12px; font-weight:700; color:var(--gold); margin-bottom:6px;">${n.source} &bull; <span style="font-family:var(--mono); font-size:9px; color:var(--text-faint)">${n.timestamp}</span></div>
+        <div style="font-size:12px; line-height:1.4; color:var(--text); margin-bottom:6px;">${n.title}</div>
+        <div style="font-size:11px; line-height:1.4; color:var(--text-dim);">${n.summary}</div>
+      </div>
+    `).join("");
+  } catch (e) {
+    list.innerHTML = "<span style='color:var(--red)'>Failed to load news.</span>";
+  }
 }
 
 async function checkBackendStatus() {
@@ -57,6 +71,7 @@ function setupTabs() {
       tab.classList.add("active");
       document.getElementById("tab-" + tab.dataset.tab).classList.add("active");
       if (tab.dataset.tab === "portfolio") loadPortfolioUI();
+      if (tab.dataset.tab === "news") loadNewsFeed();
     });
   });
 }
@@ -237,17 +252,21 @@ async function simulatePortfolioImpact(text, portfolio) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ news_text: text, persona: persona })
     });
+
+    if (!res.ok) throw new Error("Backend API Failed");
     const data = await res.json();
 
     resultsDiv.innerHTML = `
             <div style="background:var(--surface2); padding:16px; border-radius:8px; border:1px solid var(--border);">
                 <div style="font-family:var(--display); font-size:16px; margin-bottom:12px; color:var(--gold);">Portfolio Simulation</div>
-                <div class="pill pill-${data.portfolio_change_pct >= 0 ? 'positive' : 'negative'}">Expected Change: ${data.portfolio_change_pct}%</div>
-                <div style="margin-top:12px; font-size:12px; line-height:1.6; color:var(--text);">${data.advisory.replace(/\n/g, '<br/>')}</div>
+                <div class="pill pill-${data.overall_signal > 0.5 ? 'positive' : (data.overall_signal < 0.5 ? 'negative' : 'neutral')}">Signal Score: ${(data.overall_signal * 100).toFixed(0)}</div>
+                <div style="margin-top:12px; font-size:12px; font-weight:bold; color:var(--gold);">${data.primary_sector_affected.toUpperCase()} IMPACT:</div>
+                <div style="margin-top:4px; font-size:12px; line-height:1.6; color:var(--text);">${data.estimated_portfolio_impact}</div>
+                <div style="margin-top:12px; font-size:11px; line-height:1.6; color:var(--text-dim); font-style:italic;">"${data.ai_advisory}"</div>
             </div>
         `;
-  } catch {
-    resultsDiv.innerHTML = "<span style='color:var(--red)'>Simulation Failed</span>";
+  } catch (err) {
+    resultsDiv.innerHTML = `<span style='color:var(--red)'>Simulation Failed: ${err.message}</span>`;
   }
 }
 

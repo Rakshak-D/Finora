@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Finora AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
   <style>
     :root {
-      --bg:          #0a0a0f;
-      --surface:     #12131b;
-      --surface2:    #1a1b26;
-      --border:      #2b2e40;
+      --bg: #0a0a0f;
+      --surface: #12131b;
+      --surface2: #1a1b26;
+      --border: #2b2e40;
       --border-glow: #4a4e69;
-      --gold:        #f59e0b;
-      --gold-light:  #fbbf24;
-      --gold-dim:    #92400e;
-      --green:       #10b981;
-      --green-dim:   #064e3b;
-      --red:         #ef4444;
-      --blue:        #3b82f6;
-      --text:        #f8fafc;
-      --text-dim:    #94a3b8;
-      --text-faint:  #475569;
+      --gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --gold-dim: #92400e;
+      --green: #10b981;
+      --green-dim: #064e3b;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --text-faint: #475569;
 
-      --display:  'Playfair Display', Georgia, serif;
-      --mono:     'IBM Plex Mono', 'Courier New', monospace;
-      --body:     'DM Sans', sans-serif;
+      --display: 'Playfair Display', Georgia, serif;
+      --mono: 'IBM Plex Mono', 'Courier New', monospace;
+      --body: 'DM Sans', sans-serif;
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       width: 420px;
@@ -47,232 +54,539 @@
       background: linear-gradient(145deg, #1e1b4b 0%, #0f172a 100%);
       border-bottom: 1px solid var(--border-glow);
       padding: 16px 20px;
-      display: flex; align-items: center; justify-content: space-between;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     }
-    .logo { display: flex; align-items: center; gap: 12px; }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .logo-emblem {
-      width: 38px; height: 38px;
+      width: 38px;
+      height: 38px;
       background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
       clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--display); font-size: 18px; font-weight: 900;
-      color: #000; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 900;
+      color: #000;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
     }
+
     .logo-name {
-      font-family: var(--display); font-size: 20px; font-weight: 700;
-      color: var(--text); letter-spacing: 2px;
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 2px;
     }
+
     .logo-tagline {
-      font-family: var(--mono); font-size: 9px; font-weight: 400;
-      letter-spacing: 3px; color: var(--gold);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      color: var(--gold);
     }
+
     .status-badge {
-      display: flex; align-items: center; gap: 6px;
-      background: rgba(255,255,255,0.05); padding: 4px 10px;
-      border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
     .status-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green); box-shadow: 0 0 8px var(--green);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
       animation: pulse 2s infinite;
     }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-    .status-label { font-family: var(--mono); font-size: 8px; font-weight: 500; letter-spacing: 1px; color: var(--text-dim); }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .4
+      }
+    }
+
+    .status-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
 
     /* ── Tabs ── */
-    .tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); }
-    .tab {
-      flex: 1; padding: 12px 0; text-align: center; cursor: pointer;
-      font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 2px;
-      color: var(--text-faint); transition: var(--transition);
-      border-bottom: 2px solid transparent; text-transform: uppercase;
+    .tabs {
+      display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
     }
-    .tab:hover { color: var(--text-dim); }
+
+    .tab {
+      flex: 1;
+      padding: 12px 0;
+      text-align: center;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--text-faint);
+      transition: var(--transition);
+      border-bottom: 2px solid transparent;
+      text-transform: uppercase;
+    }
+
+    .tab:hover {
+      color: var(--text-dim);
+    }
+
     .tab.active {
-      color: var(--gold); border-bottom-color: var(--gold);
-      background: linear-gradient(to top, rgba(245,158,11,0.05) 0%, transparent 100%);
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+      background: linear-gradient(to top, rgba(245, 158, 11, 0.05) 0%, transparent 100%);
     }
 
     /* ── Panels ── */
-    .panel { display: none; padding: 20px; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-    .panel.active { display: block; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+    .panel {
+      display: none;
+      padding: 20px;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
 
     /* ── Inputs & Labels ── */
     .label {
-      font-family: var(--mono); font-size: 9px; font-weight: 600;
-      letter-spacing: 2px; color: var(--text-faint); margin-bottom: 8px; text-transform: uppercase;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+      text-transform: uppercase;
     }
-    textarea, input[type=text] {
-      width: 100%; background: var(--surface2);
-      border: 1px solid var(--border); border-radius: 8px;
-      color: var(--text); font-family: var(--mono); font-size: 11px;
-      padding: 12px; resize: none; outline: none; transition: var(--transition);
+
+    textarea,
+    input[type=text] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 12px;
+      resize: none;
+      outline: none;
+      transition: var(--transition);
     }
-    textarea { height: 90px; }
-    textarea:focus, input[type=text]:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,158,11,0.1); }
+
+    textarea {
+      height: 90px;
+    }
+
+    textarea:focus,
+    input[type=text]:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
 
     /* ── Buttons ── */
     .btn {
-      width: 100%; padding: 14px; font-family: var(--mono); font-size: 10px; font-weight: 600;
-      letter-spacing: 2px; border: none; border-radius: 8px; cursor: pointer;
-      transition: var(--transition); text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .btn-primary { background: linear-gradient(135deg, var(--gold) 0%, #d97706 100%); color: #000; box-shadow: 0 4px 15px rgba(245,158,11,0.3); }
-    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,158,11,0.5); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-    
-    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border-glow); margin-top: 10px; }
-    .btn-outline:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); background: rgba(59,130,246,0.1); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold) 0%, #d97706 100%);
+      color: #000;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-glow);
+      margin-top: 10px;
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: rgba(59, 130, 246, 0.1);
+    }
 
     /* ── Result Cards & Glassmorphism ── */
     .result-card {
-      background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px;
-      margin-top: 16px; display: none; flex-direction: column; gap: 1px;
+      background: rgba(30, 41, 59, 0.4);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin-top: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 1px;
       overflow: hidden;
     }
-    .result-card.show { display: flex; animation: slideUp 0.4s ease; }
-    @keyframes slideUp { from{opacity:0;transform:translateY(15px) scale(0.98)} to{opacity:1;transform:none} }
-    
-    .r-section { background: rgba(15, 23, 42, 0.6); padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-    .r-section:last-child { border-bottom: none; }
-    
-    .r-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .r-title { font-family: var(--display); font-size: 14px; color: var(--gold); }
-    
-    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .metric { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
-    .metric-label { font-family: var(--mono); font-size: 8px; color: var(--text-faint); margin-bottom: 4px; letter-spacing: 1px; }
-    .metric-val { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
+
+    .result-card.show {
+      display: flex;
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .r-section {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .r-section:last-child {
+      border-bottom: none;
+    }
+
+    .r-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .r-title {
+      font-family: var(--display);
+      font-size: 14px;
+      color: var(--gold);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .metric {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .metric-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--text-faint);
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+    }
+
+    .metric-val {
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+    }
 
     /* Domino Chain UI */
-    .domino-node { display: flex; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.2); border-left: 2px solid var(--gold); margin-bottom: 6px; border-radius: 0 6px 6px 0; }
-    .domino-node:last-child { margin-bottom: 0; }
-    .node-arrow { color: var(--text-faint); font-family: var(--mono); font-size: 14px; }
-    
+    .domino-node {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 2px solid var(--gold);
+      margin-bottom: 6px;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .domino-node:last-child {
+      margin-bottom: 0;
+    }
+
+    .node-arrow {
+      color: var(--text-faint);
+      font-family: var(--mono);
+      font-size: 14px;
+    }
+
     /* History Echo UI */
-    .echo-card { font-size: 11px; padding: 10px; background: rgba(16,185,129,0.05); border-left: 2px solid var(--green); margin-bottom: 8px; }
+    .echo-card {
+      font-size: 11px;
+      padding: 10px;
+      background: rgba(16, 185, 129, 0.05);
+      border-left: 2px solid var(--green);
+      margin-bottom: 8px;
+    }
 
-    .pill { padding: 3px 8px; border-radius: 6px; font-family: var(--mono); font-size: 9px; }
-    .pill-positive { background: rgba(16,185,129,0.2); color: var(--green); }
-    .pill-negative { background: rgba(239,68,68,0.2); color: var(--red); }
-    .pill-neutral  { background: rgba(148,163,184,0.2); color: var(--text-dim); }
+    .pill {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 9px;
+    }
 
-    .msg { font-family: var(--mono); font-size: 10px; padding: 10px; border-radius: 6px; margin-top: 12px; display: none; }
-    .msg.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
-    .msg.info  { background: rgba(59,130,246,0.1); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
-    .msg.show { display: block; }
-    
+    .pill-positive {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--green);
+    }
+
+    .pill-negative {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--red);
+    }
+
+    .pill-neutral {
+      background: rgba(148, 163, 184, 0.2);
+      color: var(--text-dim);
+    }
+
+    .msg {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .msg.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .msg.info {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--blue);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .msg.show {
+      display: block;
+    }
+
     /* Portfolio */
-    .stock-entry { display: flex; gap: 8px; margin-bottom: 8px; }
-    .stock-entry input { flex: 1; padding: 10px; font-size: 12px; }
-    .stock-entry input:first-child { flex: 0 0 100px; text-transform: uppercase; }
-    .btn-remove { background: none; border: 1px solid var(--border); color: var(--red); width: 32px; border-radius: 8px; cursor: pointer; transition: var(--transition); }
-    .btn-remove:hover { background: rgba(239,68,68,0.2); }
-    
-    /* Loader */
-    .spinner { display: none; width: 22px; height: 22px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 16px auto 0; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .stock-entry {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
 
+    .stock-entry input {
+      flex: 1;
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    .stock-entry input:first-child {
+      flex: 0 0 100px;
+      text-transform: uppercase;
+    }
+
+    .btn-remove {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--red);
+      width: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-remove:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* Loader */
+    .spinner {
+      display: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 16px auto 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 </head>
+
 <body>
 
-<div class="header">
-  <div class="logo">
-    <div class="logo-emblem">F</div>
-    <div>
-      <div class="logo-name">FINORA</div>
-      <div class="logo-tagline">AI PIPELINE V2</div>
-    </div>
-  </div>
-  <div class="status-badge">
-    <div class="status-dot" id="statusDot"></div>
-    <span class="status-label">ML BACKEND</span>
-  </div>
-</div>
-
-<div class="tabs">
-  <div class="tab active" data-tab="analyse">ANALYSE EVENT</div>
-  <div class="tab" data-tab="portfolio">PORTFOLIO</div>
-  <div class="tab" data-tab="settings">SETTINGS</div>
-</div>
-
-<!-- ANALYSE -->
-<div class="panel active" id="tab-analyse">
-  <div class="label">Event Payload</div>
-  <textarea id="headlineInput" placeholder="Paste a financial event, headline, or policy announcement..."></textarea>
-  <button class="btn btn-outline" id="scrapeBtn">Scrape Event</button>
-  
-  <div style="margin-top: 16px;"></div>
-  <button class="btn btn-primary" id="analyseBtn">RUN ML PIPELINE</button>
-
-  <div class="spinner" id="spinner"></div>
-  <div class="msg error" id="errorMsg"></div>
-
-  <!-- Dynamic Result Card -->
-  <div class="result-card" id="resultCard">
-    <!-- NLP Metrics -->
-    <div class="r-section">
-      <div class="r-header"><span class="r-title">Inference Results</span></div>
-      <div class="metrics-grid">
-        <div class="metric">
-          <div class="metric-label">SENTIMENT</div>
-          <div class="metric-val" id="r-sentiment">—</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">PRIMARY SECTOR</div>
-          <div class="metric-val" id="r-category">—</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">EVENT TYPE</div>
-          <div class="metric-val" id="r-type" style="font-size:10px; color:var(--text-dim);">—</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">CONFIDENCE</div>
-          <div class="metric-val" id="r-confidence" style="color:var(--gold);">—</div>
-        </div>
+  <div class="header">
+    <div class="logo">
+      <div class="logo-emblem">F</div>
+      <div>
+        <div class="logo-name">FINORA</div>
+        <div class="logo-tagline">AI PIPELINE V2</div>
       </div>
     </div>
-
-    <!-- AI Chain -->
-    <div class="r-section">
-      <div class="r-header"><span class="r-title">Domino Effect Prediction</span></div>
-      <div id="r-domino-chain" style="font-size:11px; margin-top:8px;"></div>
-    </div>
-
-    <!-- History Echo -->
-    <div class="r-section">
-      <div class="r-header"><span class="r-title">Historical Vector Echo</span></div>
-      <div id="r-history-echo" style="margin-top:8px;"></div>
+    <div class="status-badge">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-label">ML BACKEND</span>
     </div>
   </div>
-</div>
 
-<!-- PORTFOLIO -->
-<div class="panel" id="tab-portfolio">
-  <div class="label" style="text-transform: none; color: var(--text-dim);">
-    Your mock portfolio will be impacted by the analyzed event.
+  <div class="tabs">
+    <div class="tab active" data-tab="analyse">ANALYSE EVENT</div>
+    <div class="tab" data-tab="portfolio">PORTFOLIO</div>
+    <div class="tab" data-tab="news">LIVE NEWS</div>
   </div>
-  <div id="stockList"></div>
-  <button class="btn btn-outline" id="addStockBtn" style="width: 100%; border-style: dashed;">+ ADD HOLDING</button>
-  <div style="height: 12px;"></div>
-  <button class="btn btn-primary" id="savePortfolioBtn">SIMULATE PORTFOLIO IMPACT</button>
-  
-  <div id="portfolioResults" style="margin-top: 20px;"></div>
-</div>
 
-<!-- SETTINGS -->
-<div class="panel" id="tab-settings">
-  <div class="label">API Configuration</div>
-  <input type="text" id="apiUrlInput" placeholder="http://localhost:8000" />
-  <div style="height: 16px;"></div>
-  <button class="btn btn-primary" id="saveSettingsBtn">SAVE</button>
-  <div class="msg info" id="settingsMsg"></div>
-</div>
+  <!-- ANALYSE -->
+  <div class="panel active" id="tab-analyse">
+    <div class="label">Event Payload</div>
+    <textarea id="headlineInput" placeholder="Paste a financial event, headline, or policy announcement..."></textarea>
+    <button class="btn btn-outline" id="scrapeBtn">Scrape Event</button>
 
-<script src="popup.js"></script>
+    <div style="margin-top: 16px;"></div>
+    <button class="btn btn-primary" id="analyseBtn">RUN ML PIPELINE</button>
+
+    <div class="spinner" id="spinner"></div>
+    <div class="msg error" id="errorMsg"></div>
+
+    <!-- Dynamic Result Card -->
+    <div class="result-card" id="resultCard">
+      <!-- NLP Metrics -->
+      <div class="r-section">
+        <div class="r-header"><span class="r-title">Inference Results</span></div>
+        <div class="metrics-grid">
+          <div class="metric">
+            <div class="metric-label">SENTIMENT</div>
+            <div class="metric-val" id="r-sentiment">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">PRIMARY SECTOR</div>
+            <div class="metric-val" id="r-category">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">EVENT TYPE</div>
+            <div class="metric-val" id="r-type" style="font-size:10px; color:var(--text-dim);">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">CONFIDENCE</div>
+            <div class="metric-val" id="r-confidence" style="color:var(--gold);">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Chain -->
+      <div class="r-section">
+        <div class="r-header"><span class="r-title">Domino Effect Prediction</span></div>
+        <div id="r-domino-chain" style="font-size:11px; margin-top:8px;"></div>
+      </div>
+
+      <!-- History Echo -->
+      <div class="r-section">
+        <div class="r-header"><span class="r-title">Historical Vector Echo</span></div>
+        <div id="r-history-echo" style="margin-top:8px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div class="panel" id="tab-portfolio">
+    <div class="label" style="text-transform: none; color: var(--text-dim);">
+      Your mock portfolio will be impacted by the analyzed event.
+    </div>
+    <div id="stockList"></div>
+    <button class="btn btn-outline" id="addStockBtn" style="width: 100%; border-style: dashed;">+ ADD HOLDING</button>
+    <div style="height: 12px;"></div>
+    <button class="btn btn-primary" id="savePortfolioBtn">SIMULATE PORTFOLIO IMPACT</button>
+
+    <div id="portfolioResults" style="margin-top: 20px;"></div>
+  </div>
+
+  <!-- NEWS -->
+  <div class="panel" id="tab-news">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <div class="label" style="margin-bottom: 0;">Market Movers</div>
+      <button class="btn btn-outline" id="refreshNewsBtn"
+        style="width: auto; padding: 4px 10px; margin-top: 0; font-size: 9px;">REFRESH</button>
+    </div>
+    <div id="newsList" style="display: flex; flex-direction: column; gap: 8px;">
+      <div class="spinner" id="newsSpinner" style="display: block;"></div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
 </body>
+
 </html>

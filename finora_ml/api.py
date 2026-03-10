@@ -1,5 +1,6 @@
 import logging
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from pydantic import BaseModel
 
@@ -18,6 +19,15 @@ logger = logging.getLogger(__name__)
 
 # Initialize FastAPI App
 app = FastAPI(title="Finora ML API", description="AI Event-to-Market Engine")
+
+# Add CORS Middleware to support Chrome Extension
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class NewsResponse(BaseModel):
     """Structured response for scraped financial news events."""

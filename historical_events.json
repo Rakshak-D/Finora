@@ -67,7 +67,7 @@
     "confidence": "high",
     "date": "2022-06-15",
     "primary_sector": "banking",
-    "search_text": "US Federal Reserve aggressive interest rate hikes to combat inflation. The US Federal Reserve raised interest rates aggressively throughout 2022 to combat post-pandemic inflation, reaching a 40-year high. Multiple consecutive 75 basis point hikes triggered global market selloff. India market impact: FII outflows from Indian equities, INR weakened significantly. IT sector hit hardest due to US slowdown fears. RBI forced to hike rates in tandem."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: MONETARY POLICY | CONTEXT: US Federal Reserve aggressive interest rate hikes to combat inflation. The US Federal Reserve raised interest rates aggressively throughout 2022 to combat post-pandemic inflation, reaching a 40-year high. Multiple consecutive 75 basis point hikes triggered global market selloff."
   },
   {
     "id": "evt_002",
@@ -137,7 +137,7 @@
     "confidence": "high",
     "date": "2020-03-20",
     "primary_sector": "banking",
-    "search_text": "Global central banks emergency interest rate cuts during COVID-19 crisis. In March 2020, central banks worldwide including the US Fed, RBI, and ECB slashed interest rates to near-zero levels as emergency measures to stimulate economies paralyzed by COVID-19 lockdowns. India market impact: RBI cut repo rate by 75bps in emergency move. Nifty rallied after initial COVID crash. Banking sector benefited from improved liquidity. Home loan rates fell significantly."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: MONETARY POLICY | CONTEXT: Global central banks emergency interest rate cuts during COVID-19 crisis. In March 2020, central banks worldwide including the US Fed, RBI, and ECB slashed interest rates to near-zero levels as emergency measures to stimulate economies paralyzed by COVID-19 lockdowns."
   },
   {
     "id": "evt_003",
@@ -207,7 +207,7 @@
     "confidence": "high",
     "date": "2020-05-22",
     "primary_sector": "banking",
-    "search_text": "Reserve Bank of India emergency rate cuts during economic slowdown. RBI cut repo rate multiple times in 2020, taking it to a record low of 4% to combat COVID-19 economic impact. This was the most aggressive rate cut cycle in Indian history. India market impact: Direct Indian market event. Home loans and auto loans became cheaper. Real estate stocks like DLF surged. PSU banks outperformed on improved NIM expectations."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: MONETARY POLICY | CONTEXT: Reserve Bank of India emergency rate cuts during economic slowdown. RBI cut repo rate multiple times in 2020, taking it to a record low of 4% to combat COVID-19 economic impact. This was the most aggressive rate cut cycle in Indian history."
   },
   {
     "id": "evt_004",
@@ -276,7 +276,7 @@
     "confidence": "high",
     "date": "2013-05-22",
     "primary_sector": "banking",
-    "search_text": "US Federal Reserve taper tantrum announcement affecting emerging markets. In May 2013, Fed Chairman Ben Bernanke hinted at tapering quantitative easing. This triggered a massive selloff in emerging market currencies and bonds as capital fled back to the US. India market impact: INR fell to record lows against USD. RBI had to intervene heavily. FII equity outflows exceeded $5 billion. Current account deficit fears worsened."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: MONETARY POLICY | CONTEXT: US Federal Reserve taper tantrum announcement affecting emerging markets. In May 2013, Fed Chairman Ben Bernanke hinted at tapering quantitative easing. This triggered a massive selloff in emerging market currencies and bonds as capital fled back to the US."
   },
   {
     "id": "evt_005",
@@ -347,7 +347,7 @@
     "confidence": "high",
     "date": "2022-05-04",
     "primary_sector": "banking",
-    "search_text": "RBI repo rate hike cycle to control inflation in India. Reserve Bank of India raised the repo rate multiple times in 2022-2023 from 4% to 6.5% to combat inflation, mirroring global central bank tightening. This was the sharpest RBI tightening cycle in over a decade. India market impact: Rate hikes increased EMI burden across India. Home loan rates rose from 6.5% to 9%+. Real estate and auto stocks corrected. Banks saw initial NIM expansion but credit growth concerns emerged."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: MONETARY POLICY | CONTEXT: RBI repo rate hike cycle to control inflation in India. Reserve Bank of India raised the repo rate multiple times in 2022-2023 from 4% to 6.5% to combat inflation, mirroring global central bank tightening. This was the sharpest RBI tightening cycle in over a decade."
   },
   {
     "id": "evt_006",
@@ -417,7 +417,7 @@
     "confidence": "high",
     "date": "2022-02-24",
     "primary_sector": "energy",
-    "search_text": "Russia invades Ukraine triggering global geopolitical crisis. Russia launched a full-scale military invasion of Ukraine on February 24, 2022. This triggered the worst geopolitical crisis in Europe since WWII, causing massive commodity price spikes and global market turmoil. India market impact: India imports 80% of its oil. Crude surge directly impacted India's current account deficit. INR weakened sharply. Oil marketing companies (HPCL, BPCL, IOC) crashed. Defense stocks (HAL, BEL) rallied. India abstained from UN vote, navigating diplomatically."
+    "search_text": "FINANCIAL EVENT -> SECTOR: ENERGY | TYPE: GEOPOLITICAL CONFLICT | CONTEXT: Russia invades Ukraine triggering global geopolitical crisis. Russia launched a full-scale military invasion of Ukraine on February 24, 2022. This triggered the worst geopolitical crisis in Europe since WWII, causing massive commodity price spikes and global market turmoil."
   },
   {
     "id": "evt_007",
@@ -487,7 +487,7 @@
     "confidence": "high",
     "date": "2023-10-07",
     "primary_sector": "energy",
-    "search_text": "Israel Hamas war escalation affecting Middle East stability. Hamas launched a major attack on Israel on October 7, 2023, killing 1,200+ people. Israel declared war and began ground operations in Gaza, raising fears of wider Middle East conflict and oil supply disruption. India market impact: Oil prices spiked on Middle East supply risk. India's fuel import bill rose. INR weakened. Defense stocks rallied. Aviation sector (IndiGo, Air India) fell on higher fuel costs."
+    "search_text": "FINANCIAL EVENT -> SECTOR: ENERGY | TYPE: GEOPOLITICAL CONFLICT | CONTEXT: Israel Hamas war escalation affecting Middle East stability. Hamas launched a major attack on Israel on October 7, 2023, killing 1,200+ people. Israel declared war and began ground operations in Gaza, raising fears of wider Middle East conflict and oil supply disruption."
   },
   {
     "id": "evt_008",
@@ -556,7 +556,7 @@
     "confidence": "medium",
     "date": "2019-02-26",
     "primary_sector": "defence",
-    "search_text": "India Pakistan border military tensions and conflict escalation. Military standoffs between India and Pakistan along the Line of Control, including the 2019 Balakot airstrikes, have historically triggered short-term market panic in Indian equities before recovery. India market impact: Defense stocks (HAL, BEL, Bharat Forge) surge. Aviation stocks fall on airspace closure. Markets recover quickly once tensions de-escalate. FII outflows temporary. Gold demand spikes among retail investors."
+    "search_text": "FINANCIAL EVENT -> SECTOR: DEFENCE | TYPE: GEOPOLITICAL CONFLICT | CONTEXT: India Pakistan border military tensions and conflict escalation. Military standoffs between India and Pakistan along the Line of Control, including the 2019 Balakot airstrikes, have historically triggered short-term market panic in Indian equities before recovery."
   },
   {
     "id": "evt_009",
@@ -621,11 +621,11 @@
       }
     },
     "india_impact": "India imports 80% of oil. Production cuts hurt Indian economy via higher import costs. Oil marketing companies (HPCL, BPCL, IOC) decline. Aviation sector (IndiGo, SpiceJet) faces higher fuel costs. INR under pressure.",
-    "reasoning": "Supply cuts directly raise crude oil prices. For India as an oil importer, this is broadly negative — higher import bills widen current account deficit, weaken the rupee, and increase fuel prices domestically.",
+    "reasoning": "Supply cuts directly raise crude oil prices. For India as an oil importer, this is broadly negative \u2014 higher import bills widen current account deficit, weaken the rupee, and increase fuel prices domestically.",
     "confidence": "high",
     "date": "2016-11-30",
     "primary_sector": "energy",
-    "search_text": "OPEC historic agreement to cut global oil production. OPEC and Russia agreed in 2016 to cut production by 1.8 million barrels per day in the first such coordinated cut since 2008. This ended a two-year price war that had crashed oil to $27/barrel. India market impact: India imports 80% of oil. Production cuts hurt Indian economy via higher import costs. Oil marketing companies (HPCL, BPCL, IOC) decline. Aviation sector (IndiGo, SpiceJet) faces higher fuel costs. INR under pressure."
+    "search_text": "FINANCIAL EVENT -> SECTOR: ENERGY | TYPE: COMMODITY SUPPLY EVENT | CONTEXT: OPEC historic agreement to cut global oil production. OPEC and Russia agreed in 2016 to cut production by 1.8 million barrels per day in the first such coordinated cut since 2008. This ended a two-year price war that had crashed oil to $27/barrel."
   },
   {
     "id": "evt_010",
@@ -695,7 +695,7 @@
     "confidence": "medium",
     "date": "2021-03-01",
     "primary_sector": "it",
-    "search_text": "Global semiconductor shortage disrupting automotive and tech production. A worldwide semiconductor shortage that began in 2020 severely disrupted automotive manufacturing globally in 2021. Auto plants shut down, tech product launches delayed, and chip stocks surged. India market impact: Indian auto sector (Maruti, Tata Motors, M&M) faced production halts due to chip shortage. Two-wheeler production declined. IT companies like Infosys and TCS saw increased demand for digital transformation."
+    "search_text": "FINANCIAL EVENT -> SECTOR: IT | TYPE: COMMODITY SUPPLY EVENT | CONTEXT: Global semiconductor shortage disrupting automotive and tech production. A worldwide semiconductor shortage that began in 2020 severely disrupted automotive manufacturing globally in 2021. Auto plants shut down, tech product launches delayed, and chip stocks surged."
   },
   {
     "id": "evt_011",
@@ -766,7 +766,7 @@
     "confidence": "high",
     "date": "2016-11-08",
     "primary_sector": "banking",
-    "search_text": "India demonetization sudden ban on high value currency notes. On November 8, 2016, PM Narendra Modi announced the immediate demonetization of Rs 500 and Rs 1000 notes, invalidating 86% of India's currency in circulation. Massive disruption to cash-dependent economy. India market impact: Massive cash crunch paralyzed India's informal economy. Real estate crashed as cash transactions dried up. Banking stocks fell initially on operational chaos but recovered as deposits surged. Bitcoin surged as people sought alternatives."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: POLICY SHOCK | CONTEXT: India demonetization sudden ban on high value currency notes. On November 8, 2016, PM Narendra Modi announced the immediate demonetization of Rs 500 and Rs 1000 notes, invalidating 86% of India's currency in circulation. Massive disruption to cash-dependent economy."
   },
   {
     "id": "evt_012",
@@ -837,7 +837,7 @@
     "confidence": "high",
     "date": "2017-07-01",
     "primary_sector": "fmcg",
-    "search_text": "India GST Goods and Services Tax implementation. India implemented the Goods and Services Tax on July 1, 2017, replacing a complex web of state and central taxes. Considered India's biggest tax reform since independence, it disrupted supply chains initially before stabilizing. India market impact: Short-term supply chain disruptions affected FMCG and auto sectors. Logistics companies benefited from unified tax market. Technology companies saw demand for GST compliance software. Long-term positive for organized sector."
+    "search_text": "FINANCIAL EVENT -> SECTOR: FMCG | TYPE: POLICY SHOCK | CONTEXT: India GST Goods and Services Tax implementation. India implemented the Goods and Services Tax on July 1, 2017, replacing a complex web of state and central taxes. Considered India's biggest tax reform since independence, it disrupted supply chains initially before stabilizing."
   },
   {
     "id": "evt_013",
@@ -908,7 +908,7 @@
     "confidence": "high",
     "date": "2020-03-24",
     "primary_sector": "banking",
-    "search_text": "COVID-19 global pandemic triggering worldwide economic shutdown. WHO declared COVID-19 a global pandemic on March 11, 2020. India announced a complete national lockdown on March 24, 2020. Global equity markets saw their fastest-ever bear market, with Nifty crashing 38% from January to March 2020. India market impact: Complete economic standstill. Airlines, hotels, malls, cinema chains shut. Banking sector NPA fears surged. IT companies transitioned to WFH. Pharma stocks surged. Government stimulus of Rs 20 lakh crore announced."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: PANDEMIC / HEALTH CRISIS | CONTEXT: COVID-19 global pandemic triggering worldwide economic shutdown. WHO declared COVID-19 a global pandemic on March 11, 2020. India announced a complete national lockdown on March 24, 2020. Global equity markets saw their fastest-ever bear market, with Nifty crashing 38% from January to March 2020."
   },
   {
     "id": "evt_014",
@@ -979,7 +979,7 @@
     "confidence": "high",
     "date": "2023-01-24",
     "primary_sector": "infra",
-    "search_text": "Adani Group stocks crash after Hindenburg Research short-seller report. US short-seller Hindenburg Research published a damning report on January 24, 2023 accusing the Adani Group of accounting fraud and stock manipulation. Adani stocks lost over $100 billion in market cap within days. India market impact: Individual Adani Group stocks fell 50-85%. The broader Nifty fell but recovered quickly. LIC and SBI, which had exposure to Adani bonds, also corrected. Raised concerns about Indian corporate governance. FPO cancelled."
+    "search_text": "FINANCIAL EVENT -> SECTOR: INFRA | TYPE: CORPORATE / FINANCIAL CRISIS | CONTEXT: Adani Group stocks crash after Hindenburg Research short-seller report. US short-seller Hindenburg Research published a damning report on January 24, 2023 accusing the Adani Group of accounting fraud and stock manipulation. Adani stocks lost over $100 billion in market cap within days."
   },
   {
     "id": "evt_015",
@@ -1044,12 +1044,12 @@
         "est_pct_1m": "-5.0%"
       }
     },
-    "india_impact": "NBFC sector froze — DHFL, Yes Bank, Reliance Capital all faced liquidity stress. Mutual funds with NBFC exposure saw massive redemptions. Real estate sector starved of credit. RBI had to inject liquidity urgently.",
+    "india_impact": "NBFC sector froze \u2014 DHFL, Yes Bank, Reliance Capital all faced liquidity stress. Mutual funds with NBFC exposure saw massive redemptions. Real estate sector starved of credit. RBI had to inject liquidity urgently.",
     "reasoning": "NBFC default triggers credit freeze across the shadow banking system. Banks with NBFC exposure mark losses. Credit flow to real estate and SMEs dries up causing second-order economic damage.",
     "confidence": "high",
     "date": "2018-09-21",
     "primary_sector": "banking",
-    "search_text": "IL&FS Infrastructure Leasing and Financial Services debt default crisis India. IL&FS, a systemically important infrastructure financing company, defaulted on debt repayments in September 2018 with total debt of Rs 94,000 crore. This triggered a liquidity crisis across the entire NBFC sector. India market impact: NBFC sector froze — DHFL, Yes Bank, Reliance Capital all faced liquidity stress. Mutual funds with NBFC exposure saw massive redemptions. Real estate sector starved of credit. RBI had to inject liquidity urgently."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: CORPORATE / FINANCIAL CRISIS | CONTEXT: IL&FS Infrastructure Leasing and Financial Services debt default crisis India. IL&FS, a systemically important infrastructure financing company, defaulted on debt repayments in September 2018 with total debt of Rs 94,000 crore. This triggered a liquidity crisis across the entire NBFC sector."
   },
   {
     "id": "evt_016",
@@ -1118,7 +1118,7 @@
     "confidence": "high",
     "date": "2020-03-05",
     "primary_sector": "banking",
-    "search_text": "Yes Bank collapse and rescue by RBI government intervention. RBI placed Yes Bank under a moratorium on March 5, 2020, limiting withdrawals to Rs 50,000. SBI-led rescue consortium took over. Yes Bank had made bad loans worth Rs 40,000+ crore to troubled companies. India market impact: Yes Bank AT1 bonds written to zero, wiping out retail investors. Other private banks (ICICI, Axis, Kotak) fell on contagion fears. SBI shares declined on rescue cost. Depositor panic across private banks briefly."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: CORPORATE / FINANCIAL CRISIS | CONTEXT: Yes Bank collapse and rescue by RBI government intervention. RBI placed Yes Bank under a moratorium on March 5, 2020, limiting withdrawals to Rs 50,000. SBI-led rescue consortium took over. Yes Bank had made bad loans worth Rs 40,000+ crore to troubled companies."
   },
   {
     "id": "evt_017",
@@ -1189,7 +1189,7 @@
     "confidence": "high",
     "date": "2021-02-01",
     "primary_sector": "infra",
-    "search_text": "India Union Budget announcement with major fiscal policy changes. Union Budget announcements in India cause significant market movement based on tax changes, capex allocation, sector-specific incentives, and fiscal deficit targets. The 2021 Budget surprised positively with massive infrastructure spending. India market impact: 2021 Budget was highly market positive. Infrastructure spending surge boosted L&T, NCC, KNR Constructions. Bank privatization announcement boosted PSU banks. Healthcare capex boosted pharma and diagnostics stocks."
+    "search_text": "FINANCIAL EVENT -> SECTOR: INFRA | TYPE: FISCAL POLICY | CONTEXT: India Union Budget announcement with major fiscal policy changes. Union Budget announcements in India cause significant market movement based on tax changes, capex allocation, sector-specific incentives, and fiscal deficit targets. The 2021 Budget surprised positively with massive infrastructure spending."
   },
   {
     "id": "evt_018",
@@ -1259,7 +1259,7 @@
     "confidence": "high",
     "date": "2019-05-23",
     "primary_sector": "infra",
-    "search_text": "India general election results announcement Lok Sabha. Indian general elections are one of the largest market-moving events. The May 2019 election returned BJP with a strong majority, triggering a massive market rally. Election results cause extreme volatility on result day. India market impact: Strong majority government win is historically very positive for Indian markets. Political stability reduces policy uncertainty. INR strengthens. Defense, infrastructure, and PSU sectors get the biggest boost."
+    "search_text": "FINANCIAL EVENT -> SECTOR: INFRA | TYPE: POLITICAL EVENT | CONTEXT: India general election results announcement Lok Sabha. Indian general elections are one of the largest market-moving events. The May 2019 election returned BJP with a strong majority, triggering a massive market rally. Election results cause extreme volatility on result day."
   },
   {
     "id": "evt_019",
@@ -1324,12 +1324,12 @@
         "est_pct_1m": "+2.0%"
       }
     },
-    "india_impact": "Mixed for India — IT sector hurt by US slowdown fears. But Indian textiles, electronics manufacturers gained as China alternative. PLI schemes accelerated to capture supply chain shifts. Indian pharma gained US market share.",
+    "india_impact": "Mixed for India \u2014 IT sector hurt by US slowdown fears. But Indian textiles, electronics manufacturers gained as China alternative. PLI schemes accelerated to capture supply chain shifts. Indian pharma gained US market share.",
     "reasoning": "Trade wars create global growth uncertainty, hurting tech and manufacturing. India partially benefits as supply chains diversify away from China. Gold rises as safe haven. IT stocks fall on US corporate spending concerns.",
     "confidence": "medium",
     "date": "2018-07-06",
     "primary_sector": "it",
-    "search_text": "US China trade war tariffs disrupting global supply chains. The US imposed tariffs on $360 billion worth of Chinese goods in 2018-2019, triggering retaliatory tariffs from China. This disrupted global supply chains, boosted some Indian manufacturing sectors as alternatives to China. India market impact: Mixed for India — IT sector hurt by US slowdown fears. But Indian textiles, electronics manufacturers gained as China alternative. PLI schemes accelerated to capture supply chain shifts. Indian pharma gained US market share."
+    "search_text": "FINANCIAL EVENT -> SECTOR: IT | TYPE: TRADE / REGULATORY POLICY | CONTEXT: US China trade war tariffs disrupting global supply chains. The US imposed tariffs on $360 billion worth of Chinese goods in 2018-2019, triggering retaliatory tariffs from China. This disrupted global supply chains, boosted some Indian manufacturing sectors as alternatives to China."
   },
   {
     "id": "evt_020",
@@ -1397,7 +1397,7 @@
     "confidence": "medium",
     "date": "2023-01-01",
     "primary_sector": "it",
-    "search_text": "OpenAI ChatGPT generative AI boom driving global AI investment surge. OpenAI's ChatGPT launch in November 2022 triggered a global AI investment boom in 2023. Nvidia's stock tripled. Every major tech company announced massive AI investments. Raised both opportunities and job displacement fears. India market impact: Indian IT majors (TCS, Infosys, HCL, Wipro) benefited from increased demand for AI integration services. Concerns also emerged about job displacement in IT sector. Startups in AI space attracted record funding."
+    "search_text": "FINANCIAL EVENT -> SECTOR: IT | TYPE: CORPORATE / TECHNOLOGY EVENT | CONTEXT: OpenAI ChatGPT generative AI boom driving global AI investment surge. OpenAI's ChatGPT launch in November 2022 triggered a global AI investment boom in 2023. Nvidia's stock tripled. Every major tech company announced massive AI investments. Raised both opportunities and job displacement fears."
   },
   {
     "id": "evt_021",
@@ -1468,7 +1468,7 @@
     "confidence": "high",
     "date": "2008-09-15",
     "primary_sector": "banking",
-    "search_text": "Global financial crisis triggered by collapse of Lehman Brothers. Lehman Brothers filed for bankruptcy on September 15, 2008, triggering the worst global financial crisis since the Great Depression. Nifty fell from 6,000 to below 2,700 within months. Global credit markets froze. India market impact: FII outflows of over Rs 50,000 crore. Nifty fell 55% peak to trough. Indian banking sector stressed but no major failures. IT sector hit hard due to US corporate spending cuts. RBI cut rates aggressively."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: ECONOMIC / FINANCIAL CRISIS | CONTEXT: Global financial crisis triggered by collapse of Lehman Brothers. Lehman Brothers filed for bankruptcy on September 15, 2008, triggering the worst global financial crisis since the Great Depression. Nifty fell from 6,000 to below 2,700 within months. Global credit markets froze."
   },
   {
     "id": "evt_022",
@@ -1537,7 +1537,7 @@
     "confidence": "high",
     "date": "2023-03-10",
     "primary_sector": "banking",
-    "search_text": "US regional banking crisis following Silicon Valley Bank collapse. Silicon Valley Bank (SVB) collapsed on March 10, 2023 in the second-largest bank failure in US history, followed by Signature Bank. Triggered by rising interest rates causing unrealized bond losses. Created brief global banking contagion fears. India market impact: Indian banking stocks fell on contagion fears. Indian startups with SVB accounts faced temporary cash access issues. Crypto surged paradoxically as investors questioned traditional banking. IT stocks fell on US tech slowdown fears."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: ECONOMIC / FINANCIAL CRISIS | CONTEXT: US regional banking crisis following Silicon Valley Bank collapse. Silicon Valley Bank (SVB) collapsed on March 10, 2023 in the second-largest bank failure in US history, followed by Signature Bank. Triggered by rising interest rates causing unrealized bond losses. Created brief global banking contagion fears."
   },
   {
     "id": "evt_023",
@@ -1607,7 +1607,7 @@
     "confidence": "medium",
     "date": "2021-03-23",
     "primary_sector": "energy",
-    "search_text": "Suez Canal blockage disrupting global shipping and commodity supply. The container ship Ever Given ran aground in the Suez Canal on March 23, 2021, blocking one of the world's most important shipping lanes for 6 days. Around 12% of global trade passes through the Suez Canal. India market impact: Oil imports delayed and prices spiked briefly. Container freight costs rose. Indian exporters faced shipping delays. Logistics companies like Container Corporation saw some volatility."
+    "search_text": "FINANCIAL EVENT -> SECTOR: ENERGY | TYPE: COMMODITY SUPPLY EVENT | CONTEXT: Suez Canal blockage disrupting global shipping and commodity supply. The container ship Ever Given ran aground in the Suez Canal on March 23, 2021, blocking one of the world's most important shipping lanes for 6 days. Around 12% of global trade passes through the Suez Canal."
   },
   {
     "id": "evt_024",
@@ -1677,7 +1677,7 @@
     "confidence": "medium",
     "date": "2022-08-04",
     "primary_sector": "it",
-    "search_text": "China Taiwan military tensions increasing global semiconductor risk. China's military exercises around Taiwan in August 2022, following US House Speaker Nancy Pelosi's visit, heightened fears of conflict. Taiwan produces 90% of the world's advanced semiconductor chips (TSMC). India market impact: Indian IT sector fell on global tech supply chain risk. Electronics manufacturing in India (Apple suppliers) seen as beneficiary of diversification. Indian semiconductor PLI schemes gained attention."
+    "search_text": "FINANCIAL EVENT -> SECTOR: IT | TYPE: GEOPOLITICAL CONFLICT | CONTEXT: China Taiwan military tensions increasing global semiconductor risk. China's military exercises around Taiwan in August 2022, following US House Speaker Nancy Pelosi's visit, heightened fears of conflict. Taiwan produces 90% of the world's advanced semiconductor chips (TSMC)."
   },
   {
     "id": "evt_025",
@@ -1746,7 +1746,7 @@
     "confidence": "medium",
     "date": "2022-10-07",
     "primary_sector": "it",
-    "search_text": "India US semiconductor export restrictions targeting Chinese companies. The US imposed sweeping semiconductor export restrictions on China in October 2022, targeting Nvidia AI chips and chip manufacturing equipment. Aimed at preventing China from acquiring advanced chips for military use. India market impact: Indian IT companies with China exposure saw pressure. India viewed as potential beneficiary of chip supply chain diversification. Indian semiconductor startups attracted more attention. Long-term positive for India's chip ambitions."
+    "search_text": "FINANCIAL EVENT -> SECTOR: IT | TYPE: TRADE / REGULATORY POLICY | CONTEXT: India US semiconductor export restrictions targeting Chinese companies. The US imposed sweeping semiconductor export restrictions on China in October 2022, targeting Nvidia AI chips and chip manufacturing equipment. Aimed at preventing China from acquiring advanced chips for military use."
   },
   {
     "id": "evt_026",
@@ -1816,7 +1816,7 @@
     "india_impact": "HAL surged 15%+ in days. BEL, BEML, Bharat Forge, Mazagon Dock all rallied sharply. Defence PSUs rerated as long-term structural plays. Foreign defence companies began India JV partnerships. DRDO funding increased significantly.",
     "reasoning": "Import bans directly force government orders toward domestic manufacturers. HAL, BEL, BEML become quasi-monopolies for these product categories. Defence sector rerated as a long-term growth story rather than government PSU. INR strengthens on reduced import bill.",
     "confidence": "high",
-    "search_text": "India bans defence imports under Atmanirbhar Bharat self-reliance push. India's Ministry of Defence announced a ban on import of 101 defence items in August 2020. India market impact: HAL surged 15%+. BEL, BEML, Bharat Forge, Mazagon Dock all rallied sharply. Defence PSUs rerated as long-term structural plays."
+    "search_text": "FINANCIAL EVENT -> SECTOR: DEFENCE | TYPE: TRADE / REGULATORY POLICY | CONTEXT: India bans defence imports under Atmanirbhar Bharat self-reliance push. India's Ministry of Defence announced a ban on import of 101 defence items in August 2020 under PM Modi's Atmanirbhar Bharat (self-reliant India) initiative. The list was later expanded to 310 items in 2021. This was the biggest policy push for domestic defence manufacturing in Indian history."
   },
   {
     "id": "evt_027",
@@ -1886,12 +1886,12 @@
     "india_impact": "HAL rallied 8-12% on news as it is involved in offset production. BEL and BEML also gained. Indian aerospace component manufacturers benefited from offset clause requiring 30%+ local content. Sentiment booster for India's defence export ambitions.",
     "reasoning": "Large government-to-government defence deals directly benefit domestic manufacturers through offset obligations. HAL, being India's primary aerospace manufacturer, gets offset production contracts. Signals continued government commitment to defence modernization.",
     "confidence": "high",
-    "search_text": "India France Rafale Marine jets deal worth $8 billion signed. India signed a government-to-government deal with France in July 2023 for 26 Rafale Marine fighter jets for the Indian Navy. India market impact: HAL rallied 8-12%. BEL and BEML also gained. Indian aerospace component manufacturers benefited from offset clause."
+    "search_text": "FINANCIAL EVENT -> SECTOR: DEFENCE | TYPE: TRADE / REGULATORY POLICY | CONTEXT: India France Rafale Marine jets deal worth $8 billion signed. India signed a government-to-government deal with France in July 2023 for 26 Rafale Marine fighter jets for the Indian Navy's INS Vikrant aircraft carrier, valued at approximately $8 billion. This was one of India's largest defence procurement contracts ever."
   },
   {
     "id": "evt_028",
     "event": "India Pakistan military escalation cross-border strikes 2025",
-    "description": "Following a major terrorist attack in Pahalgam, Kashmir in April 2025, India launched Operation Sindoor — precision strikes targeting terrorist infrastructure in Pakistan and Pakistan-Occupied Kashmir. India and Pakistan exchanged drone and missile strikes in an unprecedented escalation. A ceasefire was reached after international pressure.",
+    "description": "Following a major terrorist attack in Pahalgam, Kashmir in April 2025, India launched Operation Sindoor \u2014 precision strikes targeting terrorist infrastructure in Pakistan and Pakistan-Occupied Kashmir. India and Pakistan exchanged drone and missile strikes in an unprecedented escalation. A ceasefire was reached after international pressure.",
     "event_type": "Geopolitical Conflict",
     "year": 2025,
     "date_approx": "2025-05-07",
@@ -1957,7 +1957,7 @@
     "india_impact": "HAL, BEL, Bharat Forge, Paras Defence surged 15-25% on defence spending expectations. IndiGo, Air India crashed on airspace closure. Tourism stocks fell. Banks fell on risk-off but recovered quickly post-ceasefire. Gold demand spiked among retail investors. Markets recovered fully within 2 weeks.",
     "reasoning": "India-Pakistan escalations historically cause sharp initial market drops that recover quickly once de-escalation occurs. Defence stocks are the direct beneficiaries of conflict scenarios. Aviation is the primary casualty due to airspace closures. Gold spikes as safe haven. Markets have historically shown resilience post-India-Pakistan standoffs.",
     "confidence": "high",
-    "search_text": "India Pakistan military escalation cross-border strikes Operation Sindoor 2025. India launched Operation Sindoor precision strikes targeting terrorist infrastructure in Pakistan following Pahalgam attack. India market impact: HAL BEL Bharat Forge Paras Defence surged 15-25%. IndiGo Air India crashed on airspace closure. Markets recovered fully within 2 weeks."
+    "search_text": "FINANCIAL EVENT -> SECTOR: DEFENCE | TYPE: GEOPOLITICAL CONFLICT | CONTEXT: India Pakistan military escalation cross-border strikes 2025. Following a major terrorist attack in Pahalgam, Kashmir in April 2025, India launched Operation Sindoor \u2014 precision strikes targeting terrorist infrastructure in Pakistan and Pakistan-Occupied Kashmir. India and Pakistan exchanged drone and missile strikes in an unprecedented escalation. A ceasefire was reached after international pressure."
   },
   {
     "id": "evt_029",
@@ -2027,7 +2027,7 @@
     "india_impact": "Sun Pharma, Dr. Reddy's, Cipla, Divi's Laboratories all rallied. API manufacturers like Laurus Labs, Granules India surged 20%+. Chemical companies involved in intermediates also benefited. India pharma exports to US and Europe gained credibility.",
     "reasoning": "PLI schemes provide direct financial incentives for domestic production, reducing import dependency. Pharma companies benefit from subsidized capex for API plants. Reduces China supply chain risk. Long-term positive for India pharma sector profitability and global market share.",
     "confidence": "high",
-    "search_text": "India Production Linked Incentive PLI scheme for pharmaceuticals and APIs 2021. India announced Rs 15,000 crore PLI scheme for pharmaceutical sector targeting bulk drug parks and API manufacturing. India market impact: Sun Pharma Dr Reddys Cipla Divis Laboratories rallied. API manufacturers like Laurus Labs Granules India surged 20%+."
+    "search_text": "FINANCIAL EVENT -> SECTOR: PHARMA | TYPE: TRADE / REGULATORY POLICY | CONTEXT: India Production Linked Incentive PLI scheme for pharmaceuticals and APIs. India announced a Rs 15,000 crore PLI scheme for pharmaceutical sector in March 2021, targeting bulk drug parks and API (Active Pharmaceutical Ingredient) manufacturing. India had been dependent on China for 70% of its API imports, a vulnerability exposed by COVID-19."
   },
   {
     "id": "evt_030",
@@ -2097,7 +2097,7 @@
     "india_impact": "Adani Green Energy, Tata Power, NTPC Renewable surged on PLI news. Waaree Energies and Premier Energies (solar module makers) rerated significantly. Traditional HPCL/BPCL faced headwinds. Metals sector benefited from aluminium and steel demand for solar infrastructure.",
     "reasoning": "Government subsidies for renewable manufacturing directly boost capex and revenue for solar companies. Import substitution of Chinese solar panels reduces trade deficit. Long-term trend toward energy self-sufficiency reduces India's oil import dependency. Negative for traditional oil marketing companies.",
     "confidence": "high",
-    "search_text": "India solar energy PLI scheme renewable energy capacity expansion 2022. India announced Rs 19,500 crore PLI scheme for solar PV module manufacturing targeting 10 GW domestic capacity. India market impact: Adani Green Energy Tata Power NTPC Renewable surged on PLI news. Waaree Energies Premier Energies rerated significantly."
+    "search_text": "FINANCIAL EVENT -> SECTOR: ENERGY | TYPE: TRADE / REGULATORY POLICY | CONTEXT: India solar energy PLI scheme and renewable energy capacity expansion. India announced a Rs 19,500 crore PLI scheme for solar PV module manufacturing in September 2022, targeting 10 GW of domestic capacity. India had committed to 500 GW of renewable energy by 2030 under COP26 pledges, making this a strategic priority."
   },
   {
     "id": "evt_031",
@@ -2167,7 +2167,7 @@
     "india_impact": "Nifty IT fell significantly. TCS, Infosys, Wipro, HCL all corrected 8-15% over the period. Bengaluru real estate market sentiment weakened. Consumer spending in IT-heavy cities slowed. However, companies that adapted to AI services faster rerated positively.",
     "reasoning": "IT layoffs signal revenue pressure and margin compression. US tech spending slowdown directly hits Indian IT offshore revenues. AI disruption creates long-term structural threat to traditional IT services. Bengaluru, Hyderabad, Pune property markets impacted by reduced employee spending.",
     "confidence": "high",
-    "search_text": "Indian IT sector mass layoffs revenue growth slowdown post-AI disruption 2023. Major Indian IT companies TCS Infosys Wipro HCL reported headcount cuts slower revenue growth as US client spending slowed and AI replaced entry-level jobs. India market impact: Nifty IT fell significantly. TCS Infosys Wipro HCL corrected 8-15%. Bengaluru real estate market sentiment weakened."
+    "search_text": "FINANCIAL EVENT -> SECTOR: IT | TYPE: CORPORATE / TECHNOLOGY EVENT | CONTEXT: Indian IT sector mass layoffs and revenue growth slowdown post-AI disruption. Major Indian IT companies including TCS, Infosys, Wipro, and HCL Technologies reported significant headcount cuts and slower revenue growth in 2023-2024 as US client spending on IT services slowed and AI tools began replacing entry-level coding jobs. TCS cut 12,000+ jobs, Wipro 8,000+."
   },
   {
     "id": "evt_032",
@@ -2236,7 +2236,7 @@
     "india_impact": "Zerodha, Angel One, Upstox, and other brokerages fell sharply on reduced F&O volumes. NSE and BSE saw lower derivatives turnover. Retail investor participation in F&O declined 40%+. Market volatility reduced in the near term. Long-term structural positive for retail investor protection.",
     "reasoning": "F&O tightening reduces speculative volumes, hurting broker revenues directly. Exchanges lose turnover-based income. However, reduced leverage protects retail investors from large losses. Banks with broking arms see EBITDA pressure. Broader market sentiment turns cautious on regulatory uncertainty.",
     "confidence": "high",
-    "search_text": "SEBI tightens F&O derivatives rules increasing margin requirements retail traders 2024. SEBI announced sweeping changes to India derivatives market including higher contract sizes upfront premium collection removal of weekly expiries. India market impact: Zerodha Angel One Upstox fell on reduced F&O volumes. Retail investor participation in F&O declined 40%+."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: TRADE / REGULATORY POLICY | CONTEXT: SEBI tightens F&O derivatives rules increasing margin requirements for retail traders. SEBI announced sweeping changes to India's derivatives (F&O) market in October 2024, including higher contract sizes, upfront premium collection, removal of weekly expiries for most indices (except Nifty and Sensex), and increased margin requirements. This was the biggest F&O regulatory overhaul in years."
   },
   {
     "id": "evt_033",
@@ -2307,7 +2307,7 @@
     "india_impact": "Tata Motors surged 40%+ through FY2023 on EV leadership. Tata Chemicals and Tata Power (EV charging) also benefited. Traditional ICE auto suppliers (Motherson, Bharat Forge auto division) faced headwinds. Battery companies attracted massive FDI. OMCs (HPCL, BPCL) saw long-term demand growth concerns.",
     "reasoning": "EV adoption shift disrupts traditional auto supply chains while creating new winners. Battery, charging infrastructure, and software companies benefit. Oil demand growth concern weighs on OMCs long-term. Import reduction of crude oil is positive for India's current account. Tata's EV ecosystem creates a vertically integrated value chain.",
     "confidence": "medium",
-    "search_text": "India electric vehicle EV adoption surge Tata Motors FAME scheme boost 2023. India EV market grew 100%+ in FY2023 driven by FAME-II subsidies rising fuel prices and Tata Motors aggressive EV portfolio. India market impact: Tata Motors surged 40%+ on EV leadership. Tata Chemicals Tata Power EV charging benefited. Traditional ICE auto suppliers faced headwinds."
+    "search_text": "FINANCIAL EVENT -> SECTOR: AUTO | TYPE: CORPORATE / TECHNOLOGY EVENT | CONTEXT: India electric vehicle EV adoption surge Tata Motors FAME scheme boost. India's EV market grew 100%+ in FY2023 driven by FAME-II subsidies, rising fuel prices, and Tata Motors' aggressive EV portfolio. Tata Motors captured 70%+ of passenger EV market share with Nexon EV and Tiago EV. Charging infrastructure expanded significantly."
   },
   {
     "id": "evt_034",
@@ -2376,7 +2376,7 @@
     "india_impact": "Massive positive surprise for markets. INR strengthened. Bond yields fell on reduced government borrowing requirement. PSU banks rallied on improved government fiscal position. Capex-heavy sectors (infra, defence) benefited as government had more spending room. Reduced fiscal deficit fears led to FII inflows.",
     "reasoning": "Record RBI dividend reduces government's need to borrow from markets, easing bond yields. Improved fiscal position allows higher capex spending without deficit concerns. INR appreciation on improved macro picture. Banking sector benefits from lower bond yields and improved liquidity conditions.",
     "confidence": "high",
-    "search_text": "RBI transfers record Rs 2.11 lakh crore dividend to Indian government 2024. Reserve Bank of India transferred record Rs 2.11 lakh crore dividend to government in May 2024 significantly exceeding market expectations. India market impact: Massive positive surprise for markets. INR strengthened. Bond yields fell. PSU banks rallied on improved government fiscal position."
+    "search_text": "FINANCIAL EVENT -> SECTOR: BANKING | TYPE: MONETARY POLICY | CONTEXT: RBI transfers record Rs 2.11 lakh crore dividend to Indian government. The Reserve Bank of India transferred a record Rs 2.11 lakh crore as dividend to the Indian government in May 2024, significantly exceeding market expectations of Rs 1 lakh crore. This created fiscal space for the government and boosted market sentiment about India's macro stability."
   },
   {
     "id": "evt_035",
@@ -2447,7 +2447,7 @@
     "india_impact": "Defence stocks (HAL, BEL, Bharat Forge) surged 10-20%. India banned 59 Chinese apps including TikTok, boosting Indian IT alternatives. Chinese consumer products faced boycotts. Xiaomi, Oppo, Vivo stocks fell. Border infrastructure spending increased massively. India-China trade tensions impacted manufacturing supply chains heavily dependent on Chinese imports.",
     "reasoning": "Border conflict triggers defence spending surge and benefits domestic manufacturers. Anti-China sentiment creates opportunity for Indian alternatives in consumer tech. Supply chain diversification accelerates as companies reduce China dependency. Gold spikes as geopolitical safe haven. Long-term structural shift away from China benefits Indian manufacturing.",
     "confidence": "high",
-    "search_text": "India China Galwan Valley military clash LAC standoff 2020. Indian and Chinese troops clashed in Galwan Valley along Line of Actual Control June 2020 resulting in Indian casualties triggering major geopolitical confrontation. India market impact: Defence stocks HAL BEL Bharat Forge surged 10-20%. India banned 59 Chinese apps boosting Indian IT alternatives. Border infrastructure spending increased massively."
+    "search_text": "FINANCIAL EVENT -> SECTOR: DEFENCE | TYPE: GEOPOLITICAL CONFLICT | CONTEXT: India China Galwan Valley military clash LAC standoff. Indian and Chinese troops clashed in the Galwan Valley along the Line of Actual Control on June 15, 2020, resulting in Indian casualties. This was the most serious India-China military confrontation in decades and triggered a major geopolitical and economic standoff including trade restrictions."
   },
   {
     "id": "evt_036",
@@ -2516,7 +2516,7 @@
     "india_impact": "Affected pharma stocks fell 15-30% on USFDA action. Sun Pharma lost significant market cap. Lupin and Aurobindo also corrected. However, competitors like Cipla and Dr. Reddy's benefited by gaining US market share. India's pharma export growth slowed temporarily. Sector-wide investment in quality compliance increased.",
     "reasoning": "USFDA import alerts directly block drug sales in the US market, hurting revenues. Individual stock impact is severe (15-30%) but sector impact is contained. Competitors gain market share. Long-term forces quality upgrades across the industry. India's reputation as pharmacy of the world temporarily damaged.",
     "confidence": "high",
-    "search_text": "India Pharma companies face USFDA import alerts quality compliance issues. Multiple Indian pharmaceutical companies Sun Pharma Lupin Aurobindo Wockhardt faced USFDA import alerts and warning letters for quality control violations. India market impact: Affected pharma stocks fell 15-30% on USFDA action. Competitors like Cipla Dr Reddys benefited by gaining US market share."
+    "search_text": "FINANCIAL EVENT -> SECTOR: PHARMA | TYPE: TRADE / REGULATORY POLICY | CONTEXT: India Pharma companies face USFDA import alerts and quality compliance issues. Multiple Indian pharmaceutical companies including Sun Pharma, Lupin, Aurobindo, and Wockhardt faced USFDA import alerts and warning letters for quality control violations at their manufacturing plants during 2015-2019. This severely impacted their ability to sell generic drugs in the lucrative US market."
   },
   {
     "id": "evt_037",
@@ -2583,9 +2583,9 @@
         "est_pct_1m": "+0.4%"
       }
     },
-    "india_impact": "Tata Steel, JSW Steel, SAIL, Hindalco, and NALCO rallied sharply. Domestic steel prices stabilized. Indian steel industry regained competitiveness. Manufacturing companies using steel faced higher input costs. Infrastructure sector had mixed reaction — higher steel costs offset by revival of domestic steel capacity.",
+    "india_impact": "Tata Steel, JSW Steel, SAIL, Hindalco, and NALCO rallied sharply. Domestic steel prices stabilized. Indian steel industry regained competitiveness. Manufacturing companies using steel faced higher input costs. Infrastructure sector had mixed reaction \u2014 higher steel costs offset by revival of domestic steel capacity.",
     "reasoning": "Antidumping duties protect domestic metal producers from unfair foreign competition. Direct revenue and margin improvement for Indian steel and aluminium companies. Downstream manufacturing faces higher input costs. Net positive for Indian industrial sector as viable domestic capacity is preserved.",
     "confidence": "high",
-    "search_text": "India imposes antidumping duties on Chinese steel aluminium metals imports 2015. India imposed antidumping duties on steel and metals products from China as China flooded global markets with cheap steel. India market impact: Tata Steel JSW Steel SAIL Hindalco NALCO rallied sharply. Domestic steel prices stabilized. Indian steel industry regained competitiveness."
+    "search_text": "FINANCIAL EVENT -> SECTOR: METALS | TYPE: TRADE / REGULATORY POLICY | CONTEXT: India imposes antidumping duties on Chinese steel aluminium metals imports. India imposed antidumping duties on several steel and metals products from China in 2015-2016 as China flooded global markets with cheap steel during its economic slowdown. India's steel industry was severely impacted by cheap Chinese imports before protective duties were imposed."
   }
 ]

@@ -4,7 +4,7 @@
 chrome.runtime.onInstalled.addListener(() => {
   console.log("Finora Intelligence installed.");
   chrome.storage.local.set({
-    apiUrl:    "http://localhost:8001",
+    apiUrl:    "http://localhost:8000",
     userId:    "user1",
     portfolio: [],
   });

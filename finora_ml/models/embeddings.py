@@ -4,7 +4,8 @@ import json
 import os
 import uuid
 import logging
-from typing import  Optional
+from typing import Optional
+from functools import lru_cache
 from ..config import BGE_MODEL, CHROMA_PERSIST_DIR, CHROMA_COLLECTION_NAME, HISTORY_TOP_K
 
 logger = logging.getLogger(__name__)
@@ -12,34 +13,33 @@ logger = logging.getLogger(__name__)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DEFAULT_JSON_PATH = os.path.join(BASE_DIR, "historical_events.json")
 
-_bge = None
 _client = None
-_collection = None
 
-
+@lru_cache(maxsize=1)
 def get_bge():
-    global _bge
-    if _bge is None:
-        _bge = SentenceTransformer(BGE_MODEL)
-    return _bge
-
+    """Lazy load and cache the SentenceTransformer embeddings model."""
+    logger.info(f"Loading SentenceTransformer: {BGE_MODEL}")
+    return SentenceTransformer(BGE_MODEL)
 
 def get_collection():
-    global _client, _collection
-    if _collection is None:
+    """Get or create the ChromaDB instance singleton."""
+    global _client
+    if _client is None:
         _client = chromadb.PersistentClient(path=CHROMA_PERSIST_DIR)
-        _collection = _client.get_or_create_collection(
-            name=CHROMA_COLLECTION_NAME,
-            metadata={"hnsw:space": "cosine"}
-        )
-    return _collection
+    
+    return _client.get_or_create_collection(
+        name=CHROMA_COLLECTION_NAME,
+        metadata={"hnsw:space": "cosine"}
+    )
 
 
 def embed_text(text: str) -> list:
+    """Generate dense vector embeddings for a given text snippet."""
     return get_bge().encode("Represent this financial news: " + text, normalize_embeddings=True).tolist()
 
 
 def seed_from_json(json_path: str = DEFAULT_JSON_PATH, force: bool = False):
+    """Seed the vector database with historical events if empty."""
     collection = get_collection()
     if collection.count() > 0 and not force:
         return collection.count()
@@ -92,6 +92,7 @@ def seed_from_json(json_path: str = DEFAULT_JSON_PATH, force: bool = False):
 
 
 def retrieve_similar_events(text: str, top_k: int = HISTORY_TOP_K, sector_filter: Optional[str] = None):
+    """Query ChromaDB for the closest semantic historical events."""
     collection = get_collection()
     if collection.count() == 0:
         return []

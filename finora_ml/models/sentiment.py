@@ -1,17 +1,16 @@
 from transformers import pipeline
+from functools import lru_cache
 from ..config import FINBERT_MODEL
 from ..schemas import SentimentResult, Sentiment
 
-_pipe = None
-
+@lru_cache(maxsize=1)
 def get_sentiment_pipe():
-    global _pipe
-    if _pipe is None:
-        _pipe = pipeline("text-classification", model=FINBERT_MODEL, return_all_scores=True)
-    return _pipe
+    """Lazy load and cache the FinBERT sentiment analysis pipeline."""
+    return pipeline("text-classification", model=FINBERT_MODEL, return_all_scores=True)
 
 
 def analyze_sentiment(text: str) -> SentimentResult:
+    """Analyzes financial sentiment using FinBERT, capping text length to avoid token limits."""
     # Truncate text to avoid token limits (FinBERT handles max 512 tokens)
     words = text.split()
     if len(words) > 400:

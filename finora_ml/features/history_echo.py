@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from ..schemas import InvestorPersona, HistoricalParallel, HistoryEchoResult
 from ..models.embeddings import retrieve_similar_events, get_asset_impact_from_metadata
-from ..config import HISTORY_TOP_K
+from ..config import HISTORY_TOP_K, TRACKED_ASSETS
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +26,10 @@ def run_history_echo(
     top_k: int = HISTORY_TOP_K,
     timeframe: str = "1w"
 ) -> HistoryEchoResult:
+    """
+    Finds historical macroeconomic parallels from Semantically Similar historical events 
+    and averages their immediate market impacts.
+    """
     sector_filter = None
     if persona and persona.sectors:
         sector_filter = persona.sectors[0].value
@@ -55,7 +59,7 @@ def run_history_echo(
         date = metadata.get("date", "unknown")
 
         price_changes = {}
-        for asset in ["Nifty_50", "Bank_Nifty", "Nifty_IT", "Gold_INR", "Crude_Oil"]:
+        for asset in TRACKED_ASSETS:
             pct = get_asset_impact_from_metadata(metadata, asset, timeframe)
             if pct != 0:
                 price_changes[asset.replace("_", " ")] = pct

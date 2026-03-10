@@ -1,19 +1,19 @@
 from transformers import pipeline
 from typing import Optional
 
+from functools import lru_cache
+
 from ..config import BART_MODEL, ALL_SECTORS, EVENT_TYPES
 from ..schemas import ClassificationResult
 
-_classifier = None
-
+@lru_cache(maxsize=1)
 def get_classifier():
-    global _classifier
-    if _classifier is None:
-        _classifier = pipeline("zero-shot-classification", model=BART_MODEL)
-    return _classifier
+    """Lazy load and cache the zero-shot classification pipeline."""
+    return pipeline("zero-shot-classification", model=BART_MODEL)
 
 
 def classify_event(text: str) -> ClassificationResult:
+    """Classifies a financial news event by primary sector and event type."""
     # Truncate text to avoid token limits (BART handles max 512 tokens)
     words = text.split()
     if len(words) > 400:
@@ -21,9 +21,29 @@ def classify_event(text: str) -> ClassificationResult:
 
     classifier = get_classifier()
 
-    sector_res = classifier(text, candidate_labels=ALL_SECTORS, multi_label=True)
-    primary_sector = sector_res["labels"][0]
-    sector_scores = dict(zip(sector_res["labels"], sector_res["scores"]))
+    # Map labels to more descriptive versions for better zero-shot performance
+    label_map = {
+        "defence": "defense and aerospace",
+        "banking": "banking and finance",
+        "it": "Information Technology (IT) and software",
+        "pharma": "pharmaceuticals and healthcare",
+        "energy": "energy, oil and gas",
+        "auto": "automotive and vehicles",
+        "infra": "infrastructure and construction",
+        "fmcg": "Consumer Goods (FMCG)",
+        "metals": "metals and mining",
+        "realestate": "real estate and property"
+    }
+    
+    reverse_map = {v: k for k, v in label_map.items()}
+    candidate_labels = list(label_map.values())
+
+    sector_res = classifier(text, candidate_labels=candidate_labels, multi_label=True)
+    primary_sector_long = sector_res["labels"][0]
+    primary_sector = reverse_map[primary_sector_long]
+    
+    # Map all scores back to keys
+    sector_scores = {reverse_map[l]: s for l, s in zip(sector_res["labels"], sector_res["scores"])}
 
     event_res = classifier(text, candidate_labels=EVENT_TYPES, multi_label=False)
     event_type = event_res["labels"][0]

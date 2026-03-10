@@ -15,8 +15,8 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 FINBERT_MODEL     = "ProsusAI/finbert"
 BART_MODEL        = "facebook/bart-large-mnli"
 BGE_MODEL         = "BAAI/bge-large-en-v1.5"
-GEMINI_MODEL      = "gemini-3-flash-preview"
-
+GEMINI_MODEL      = " #gemini-3-flash-preview"
+ #gemini-3-flash-preview
 # ─── ChromaDB ──────────────────────────────────────────────────────────────────
 CHROMA_PERSIST_DIR      = "./chroma_db"
 CHROMA_COLLECTION_NAME  = "finora_events"
@@ -60,6 +60,18 @@ SECTOR_INDEX_MAP = {
     "infra":      "^CNXINFRA",
     "realestate": "^CNXREALTY",
 }
+
+# ─── Tracked Assets for History Echo ───────────────────────────────────────────
+TRACKED_ASSETS = [
+    "Nifty_50", 
+    "Bank_Nifty", 
+    "Nifty_IT", 
+    "Gold_INR", 
+    "Crude_Oil", 
+    "USD_INR", 
+    "Crypto", 
+    "Bonds"
+]
 
 # ─── Signal Score Weights ──────────────────────────────────────────────────────
 SIGNAL_WEIGHTS = {

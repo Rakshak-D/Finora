@@ -205,3 +205,31 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# -------------------------
+# Finora ML / Vector DB
+# -------------------------
+
+# ChromaDB persistence
+finora_ml/chroma_db/
+*.sqlite3
+*.bin
+
+# Vector DB artifacts
+chroma_db/
+*.parquet
+
+# ML artifacts
+*.pt
+*.pth
+*.onnx
+*.ckpt
+
+# Logs
+*.log
+
+# Jupyter
+notebooks/.ipynb_checkpoints/
+
+# Dataset files (optional)
+historical_events.json

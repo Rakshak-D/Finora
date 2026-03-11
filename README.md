@@ -40,6 +40,11 @@ A live dashboard showing key Indian market indicators — Nifty 50, Bank Nifty, 
 **6. Chrome Extension** *(stretch goal)*
 A browser extension that lets users analyze any financial article they're reading online and see a compact impact summary without leaving the page.
 
+### Portfolio impact & historical data
+The portfolio analyser uses **historical event impact data** from `historical_events.json` (Nifty_50, Bank_Nifty, etc. % moves). To get **numerical portfolio impact** (e.g. "Estimated Gain of ₹X based on similar events"):
+1. Ensure `historical_events.json` contains events with `asset_impacts` (e.g. `est_pct_1d`, `est_pct_1w`, `est_pct_1m`).
+2. If you already had the ML backend running, **re-seed the vector DB** so it picks up these impacts: set `FORCE_RESEED_CHROMA=1` and restart the API, or delete the `finora_ml/chroma_db` folder and restart.
+
 ---
 
 ## 🛠 Planned Tech Stack

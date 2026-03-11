@@ -21,7 +21,12 @@ interface MarketData {
   last_updated: string
 }
 
-export default function MarketChart() {
+interface MarketChartProps {
+  asset?: string;
+  timeframe?: string;
+}
+
+export default function MarketChart({ asset = "Nifty", timeframe = "1D" }: MarketChartProps) {
   const [dimensions, setDimensions] = useState({ width: 500, height: 280 })
   const [marketData, setMarketData] = useState<MarketData['indices'][0] | null>(null)
   const [chartData, setChartData] = useState<{ dates: string[]; prices: number[] }>({
@@ -38,7 +43,7 @@ export default function MarketChart() {
       const newWidth = Math.min(availableWidth * 0.98, 700)
       setDimensions({ width: newWidth, height: 280 })
     }
-    
+
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
@@ -46,82 +51,97 @@ export default function MarketChart() {
 
   useEffect(() => {
     let mounted = true
-    
+
     async function fetchMarketData() {
+      let basePrice = 24215.80; // Default Nifty 50 price
+
       try {
         const response = await fetch('/api/market-data')
         if (!response.ok) {
           throw new Error('Failed to fetch market data')
         }
-        
+
         const data: MarketData = await response.json()
-        
+
         if (!mounted) return
-        
-        // Get Nifty 50 data
-        const niftyData = data.indices.find(idx => idx.symbol === 'NIFTY')
-        if (niftyData) {
-          setMarketData(niftyData)
-          
-          // Generate simulated chart data based on current price
-          const basePrice = niftyData.price
+
+        // Map asset string from dropdown to symbol
+        const symbolMap: Record<string, string> = {
+          "Nifty": "NIFTY",
+          "Bitcoin": "BTC",
+          "Gold": "GOLD",
+          "Oil": "OIL"
+        }
+        const targetSymbol = symbolMap[asset] || "NIFTY"
+
+        // Get target data
+        const targetData = data.indices.find(idx => idx.symbol === targetSymbol)
+        if (targetData) {
+          setMarketData(targetData)
+          basePrice = targetData.price
+        }
+      } catch (err) {
+        if (!mounted) return
+        // Silent fallback to default data when backend API is missing
+        const fallbackMarketData = {
+          symbol: asset === 'Bitcoin' ? 'BTC' : asset === 'Gold' ? 'GOLD' : asset === 'Oil' ? 'OIL' : 'NIFTY',
+          name: asset === 'Bitcoin' ? 'Bitcoin' : asset === 'Gold' ? 'Gold' : asset === 'Oil' ? 'Crude Oil' : 'Nifty 50',
+          price: asset === 'Bitcoin' ? 92415 : asset === 'Gold' ? 2156 : asset === 'Oil' ? 78.4 : 24215.80,
+          change: asset === 'Bitcoin' ? 1940 : asset === 'Gold' ? 19.4 : asset === 'Oil' ? -1.2 : 187.45,
+          changePercent: asset === 'Bitcoin' ? 2.1 : asset === 'Gold' ? 0.9 : asset === 'Oil' ? -1.5 : 0.78,
+          high: asset === 'Bitcoin' ? 94000 : asset === 'Gold' ? 2180 : asset === 'Oil' ? 80 : 24380.20,
+          low: asset === 'Bitcoin' ? 90000 : asset === 'Gold' ? 2130 : asset === 'Oil' ? 76 : 23980.50
+        }
+        setMarketData(fallbackMarketData)
+        basePrice = fallbackMarketData.price
+      } finally {
+        if (mounted) {
+          // Generate simulated chart data based on determined basePrice
           const dates: string[] = []
           const prices: number[] = []
-          
+
+          // Determine interval based on timeframe prop
+          let daysSub = 3
+          if (timeframe === "1D") daysSub = 0.125
+          else if (timeframe === "1W") daysSub = 1
+          else if (timeframe === "1M") daysSub = 4
+          else if (timeframe === "1Y") daysSub = 45
+
           // Generate 8 data points for the chart
           for (let i = 0; i < 8; i++) {
             const date = new Date()
-            date.setDate(date.getDate() - (7 - i) * 3)
-            dates.push(date.toISOString().split('T')[0])
-            
+
+            if (timeframe === "1D") {
+              // Intraday: space points by hours
+              date.setHours(date.getHours() - (7 - i) * 3)
+              dates.push(date.toISOString().replace('T', ' ').substring(0, 19))
+            } else {
+              // Daily, Weekly, Monthly, Yearly: space points by days
+              date.setDate(date.getDate() - (7 - i) * daysSub)
+              dates.push(date.toISOString().split('T')[0])
+            }
+
             // Generate realistic price variations around the base price
             const variation = (Math.random() - 0.5) * basePrice * 0.02
             prices.push(basePrice + variation + (i - 4) * basePrice * 0.005)
           }
-          
+
           setChartData({ dates, prices })
+          setLoading(false)
         }
-        setLoading(false)
-      } catch (err) {
-        if (!mounted) return
-        console.error('Market chart error:', err)
-        // Use default data on error
-        setMarketData({
-          symbol: 'NIFTY',
-          name: 'Nifty 50',
-          price: 24215.80,
-          change: 187.45,
-          changePercent: 0.78,
-          high: 24380.20,
-          low: 23980.50
-        })
-        setChartData({
-          dates: [
-            "2026-02-05",
-            "2026-02-09", 
-            "2026-02-13",
-            "2026-02-17",
-            "2026-02-21",
-            "2026-02-25",
-            "2026-03-01",
-            "2026-03-05",
-          ],
-          prices: [4950, 5050, 4930, 4880, 5100, 5200, 5300, 5150]
-        })
-        setLoading(false)
       }
     }
 
     fetchMarketData()
-    
+
     // Refresh every 60 seconds
     const interval = setInterval(fetchMarketData, 60000)
-    
+
     return () => {
       mounted = false
       clearInterval(interval)
     }
-  }, [])
+  }, [asset, timeframe])
 
   function formatPrice(price: number): string {
     return price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -165,7 +185,7 @@ export default function MarketChart() {
       <Panel title="Market Explorer">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-xs text-gray-400">NIFTY 50 • Intraday</p>
+            <p className="text-xs text-gray-400">{displayData.name} • {timeframe}</p>
           </div>
           <div className="flex items-center gap-2">
             <button className="p-2 rounded-lg hover:bg-white/10 transition-colors">
@@ -208,7 +228,7 @@ export default function MarketChart() {
               y: prices,
               type: "scatter",
               mode: "lines+markers",
-              line: { 
+              line: {
                 color: isPositive ? "#22c55e" : "#ef4444",
                 width: 2,
                 shape: "spline"

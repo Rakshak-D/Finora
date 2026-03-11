@@ -25,23 +25,23 @@ export default function MarketWatch() {
 
   useEffect(() => {
     let mounted = true
-    
+
     async function fetchMarketData() {
       try {
         const response = await fetch('/api/market-data')
         if (!response.ok) {
           throw new Error('Failed to fetch market data')
         }
-        
+
         const data: MarketData = await response.json()
-        
+
         if (!mounted) return
-        
+
         setMarkets(data.indices)
         setError(null)
       } catch (err) {
         if (!mounted) return
-        console.error('Market watch error:', err)
+        // Silent fallback to default markets when backend API is missing
         setError('Using cached data')
         setMarkets(getDefaultMarkets())
       } finally {
@@ -52,10 +52,10 @@ export default function MarketWatch() {
     }
 
     fetchMarketData()
-    
+
     // Refresh every 60 seconds
     const interval = setInterval(fetchMarketData, 60000)
-    
+
     return () => {
       mounted = false
       clearInterval(interval)
@@ -130,10 +130,9 @@ export default function MarketWatch() {
               </div>
 
               {/* Change */}
-              <div 
-                className={`flex items-center gap-0.5 text-xs font-bold min-w-[55px] justify-end ${
-                  isPositive ? 'text-green-400' : 'text-red-400'
-                }`}
+              <div
+                className={`flex items-center gap-0.5 text-xs font-bold min-w-[55px] justify-end ${isPositive ? 'text-green-400' : 'text-red-400'
+                  }`}
               >
                 {isPositive ? (
                   <TrendingUp className="w-2.5 h-2.5" />

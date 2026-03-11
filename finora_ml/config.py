@@ -1,14 +1,17 @@
 """
 config.py — Central config for Finora ML layer.
-All model names, API keys, and constants live here only.
 """
 
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# .env is at Finora/.env
+# config.py is at Finora/finora_ml/config.py
+# parent = finora_ml/, parent.parent = Finora/
+ROOT_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(ROOT_DIR / ".env", override=True)
 
-# ─── API Keys ──────────────────────────────────────────────────────────────────
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 # ─── Model Names ───────────────────────────────────────────────────────────────
@@ -35,8 +38,6 @@ EVENT_TYPES = [
     "natural disaster", "regulatory change", "product launch", "market crash",
 ]
 
-# ─── Risk Appetite — plain strings (NOT enums) ─────────────────────────────────
-# api.py used to call .value on these, which broke. Use plain strings throughout.
 RISK_APPETITE_OPTIONS = ["conservative", "moderate", "aggressive"]
 
 # ─── Indian Market Sector → Ticker Mapping (NSE) ───────────────────────────────
@@ -66,20 +67,11 @@ SECTOR_INDEX_MAP = {
     "realestate": "^CNXREALTY",
 }
 
-# ─── Tracked Assets for History Echo & Charts ─────────────────────────────────
-# Keys MUST match the asset_impacts keys in historical_events.json exactly.
 TRACKED_ASSETS = [
-    "Nifty_50",
-    "Bank_Nifty",
-    "Nifty_IT",
-    "Gold_INR",
-    "Crude_Oil",
-    "USD_INR",
-    "Crypto",
-    "Bonds",
+    "Nifty_50", "Bank_Nifty", "Nifty_IT",
+    "Gold_INR", "Crude_Oil", "USD_INR", "Crypto", "Bonds",
 ]
 
-# ─── Signal Score Weights (must sum to 1.0) ────────────────────────────────────
 SIGNAL_WEIGHTS = {
     "sentiment":             0.35,
     "historical_similarity": 0.30,
@@ -87,9 +79,7 @@ SIGNAL_WEIGHTS = {
     "event_confidence":      0.15,
 }
 
-# ─── Client-facing defaults (env-overridable) ─────────────────────────────────
-DEFAULT_PORTFOLIO_VALUE = float(os.getenv("DEFAULT_PORTFOLIO_VALUE", "100000"))
-DEFAULT_AVG_BUY_PRICE   = float(os.getenv("DEFAULT_AVG_BUY_PRICE", "100"))
-NEWS_DEFAULT_COUNT      = int(os.getenv("NEWS_DEFAULT_COUNT", "15"))
-
-RELEVANCE_THRESHOLD = 0.40
+DEFAULT_PORTFOLIO_VALUE = 100000.0
+DEFAULT_AVG_BUY_PRICE   = 100.0
+NEWS_DEFAULT_COUNT      = 15
+RELEVANCE_THRESHOLD     = 0.40

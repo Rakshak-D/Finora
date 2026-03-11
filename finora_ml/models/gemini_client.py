@@ -1,6 +1,9 @@
 """
 models/gemini_client.py — Gemini client (google-genai SDK).
 Install: pip install google-genai
+
+.env format (no quotes):
+    GEMINI_API_KEY=AIzaSy...yourkey
 """
 
 import json
@@ -8,40 +11,28 @@ import logging
 import os
 from typing import Optional
 
-from ..config import GEMINI_MODEL
+from ..config import GEMINI_MODEL, GEMINI_API_KEY
 from ..schemas import DominoChain, DominoNode
 
 logger = logging.getLogger(__name__)
 
-# Module-level singleton — avoids re-initialising on every call
-_gemini_client       = None
-_gemini_init_tried   = False   # track first failed attempt so we log once
+_gemini_client = None
 
 
 def get_gemini_client():
-    """
-    Lazily initialise and return the Gemini client singleton.
-    Reads GEMINI_API_KEY fresh from the environment so late .env loads work.
-    """
-    global _gemini_client, _gemini_init_tried
-
+    global _gemini_client
     if _gemini_client is not None:
         return _gemini_client
 
-    api_key = os.getenv("GEMINI_API_KEY", "").strip()
-
+    api_key = GEMINI_API_KEY.strip()
     if not api_key:
-        if not _gemini_init_tried:
-            logger.warning(
-                "GEMINI_API_KEY not found. "
-                "Add to .env WITHOUT quotes: GEMINI_API_KEY=AIza..."
-            )
-            _gemini_init_tried = True
+        logger.warning("GEMINI_API_KEY is empty. Add it to your .env file: GEMINI_API_KEY=your_key")
         return None
 
     try:
+        os.environ["GOOGLE_API_KEY"] = api_key
         from google import genai
-        _gemini_client = genai.Client(api_key=api_key)
+        _gemini_client = genai.Client()
         logger.info(f"Gemini client ready (model: {GEMINI_MODEL})")
         return _gemini_client
     except ImportError:
@@ -62,6 +53,22 @@ def _clean_json(text: str) -> dict:
     return json.loads(text.strip())
 
 
+def _offline_fallback(primary_sector: str, sentiment: str) -> tuple:
+    direction = "up" if sentiment == "positive" else "down" if sentiment == "negative" else "flat"
+    return (
+        DominoChain(
+            trigger_sector=primary_sector,
+            chain=[DominoNode(
+                sector="broad_market", direction=direction,
+                magnitude="medium",
+                reason="Gemini unavailable — set GEMINI_API_KEY in .env and restart the server."
+            )],
+            user_impact=None,
+        ),
+        None,
+    )
+
+
 def get_gemini_analysis(
     text:            str,
     primary_sector:  str,
@@ -69,24 +76,12 @@ def get_gemini_analysis(
     persona_sectors: Optional[list] = None,
 ) -> tuple:
     """
-    Single Gemini call → (DominoChain, persona_summary str | None).
+    Single Gemini call → (DominoChain, persona_summary | None).
     Falls back gracefully when key is missing or API errors occur.
     """
     client = get_gemini_client()
-
     if not client:
-        direction = "up" if sentiment == "positive" else "down"
-        return (
-            DominoChain(
-                trigger_sector=primary_sector,
-                chain=[DominoNode(
-                    sector="broad_market", direction=direction,
-                    magnitude="medium", reason="Gemini key not configured — offline fallback."
-                )],
-                user_impact=None,
-            ),
-            None,
-        )
+        return _offline_fallback(primary_sector, sentiment)
 
     persona_ctx = (
         f"The investor holds: {', '.join(persona_sectors)} sector(s)."
@@ -119,13 +114,11 @@ Rules: 2-4 chain nodes; sectors DIFFERENT from {primary_sector}; NSE/BSE context
 
     try:
         from google.genai import types
-
         response = client.models.generate_content(
             model=GEMINI_MODEL,
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.3,
-                max_output_tokens=1024,
                 response_mime_type="application/json",
             ),
         )
@@ -148,27 +141,4 @@ Rules: 2-4 chain nodes; sectors DIFFERENT from {primary_sector}; NSE/BSE context
 
     except Exception as e:
         logger.error(f"Gemini API error: {e}")
-        return (
-            DominoChain(trigger_sector=primary_sector, chain=[], user_impact="Gemini API error."),
-            None,
-        )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return _offline_fallback(primary_sector, sentiment)

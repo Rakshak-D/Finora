@@ -25,23 +25,23 @@ export default function SectorHeatmap() {
 
   useEffect(() => {
     let mounted = true
-    
+
     async function fetchSectorData() {
       try {
         const response = await fetch('/api/sector-data')
         if (!response.ok) {
           throw new Error('Failed to fetch sector data')
         }
-        
+
         const data: SectorData = await response.json()
-        
+
         if (!mounted) return
-        
+
         setSectorData(data.sectors)
         setError(null)
       } catch (err) {
         if (!mounted) return
-        console.error('Sector heatmap error:', err)
+        // Silent fallback to default data when backend API is missing
         setError('Using default data')
         setSectorData(getDefaultSectors())
       } finally {
@@ -52,10 +52,10 @@ export default function SectorHeatmap() {
     }
 
     fetchSectorData()
-    
+
     // Refresh every 60 seconds
     const interval = setInterval(fetchSectorData, 60000)
-    
+
     return () => {
       mounted = false
       clearInterval(interval)
@@ -119,7 +119,7 @@ export default function SectorHeatmap() {
           >
             {/* Shine effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
-            
+
             <p className="text-sm font-bold text-white drop-shadow-md">
               {s.name}
             </p>
@@ -128,7 +128,7 @@ export default function SectorHeatmap() {
               {s.change > 0 ? "+" : ""}
               {s.change.toFixed(1)}%
             </p>
-            
+
             <p className="text-[10px] text-white/70 mt-1">
               {s.marketCap}
             </p>

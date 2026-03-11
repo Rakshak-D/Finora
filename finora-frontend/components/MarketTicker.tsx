@@ -29,16 +29,16 @@ export default function MarketTicker() {
 
   useEffect(() => {
     let mounted = true
-    
+
     async function fetchMarketData() {
       try {
         const response = await fetch('/api/market-data')
         if (!response.ok) {
           throw new Error('Failed to fetch market data')
         }
-        
+
         const data: MarketData = await response.json()
-        
+
         if (!mounted) return
 
         // Transform API response to ticker items
@@ -48,12 +48,12 @@ export default function MarketTicker() {
           change: `${idx.changePercent >= 0 ? '+' : ''}${idx.changePercent.toFixed(2)}%`,
           isPositive: idx.changePercent >= 0
         }))
-        
+
         setItems(tickerItems)
         setError(null)
       } catch (err) {
         if (!mounted) return
-        console.error('Market ticker error:', err)
+        // Silent fallback to cached data when backend API is missing
         setError('Using cached data')
         // Fallback to default items
         setItems(getDefaultItems())
@@ -65,10 +65,10 @@ export default function MarketTicker() {
     }
 
     fetchMarketData()
-    
+
     // Refresh every 60 seconds
     const interval = setInterval(fetchMarketData, 60000)
-    
+
     return () => {
       mounted = false
       clearInterval(interval)
@@ -99,7 +99,7 @@ export default function MarketTicker() {
 
   // Use default items while loading if no error items available
   const displayItems = items.length > 0 ? items : (loading ? getDefaultItems() : items)
-  
+
   // Duplicate items for seamless loop
   const tickerItems = [...displayItems, ...displayItems, ...displayItems]
 
@@ -108,10 +108,10 @@ export default function MarketTicker() {
       {/* Gradient masks for edges */}
       <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[#020617] to-transparent z-10" />
       <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[#020617] to-transparent z-10" />
-      
-      <motion.div 
+
+      <motion.div
         className="flex items-center gap-8 py-3 whitespace-nowrap ticker-animation"
-        style={{ 
+        style={{
           width: 'fit-content'
         }}
       >
@@ -127,10 +127,9 @@ export default function MarketTicker() {
             <span className="text-sm text-gray-400 mono">
               {item.price}
             </span>
-            <span 
-              className={`flex items-center gap-1 text-xs font-medium ${
-                item.isPositive ? 'text-green-400' : 'text-red-400'
-              }`}
+            <span
+              className={`flex items-center gap-1 text-xs font-medium ${item.isPositive ? 'text-green-400' : 'text-red-400'
+                }`}
             >
               {item.isPositive ? (
                 <TrendingUp className="w-3 h-3" />

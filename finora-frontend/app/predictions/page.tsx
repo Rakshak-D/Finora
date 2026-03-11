@@ -1,31 +1,83 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 
 import Topbar from "../../components/Topbar"
 import Sidebar from "../../layout/Sidebar"
 import MarketTicker from "../../components/MarketTicker"
+import { getMarketData, getSectorData, getPredictions } from "../../services/api"
 
 import { TrendingUp, TrendingDown, Brain, Target, Calendar, ChevronRight, BarChart2, Zap } from "lucide-react"
 
 export default function PredictionsPage() {
 
-const predictions = [
+const [predictions, setPredictions] = useState([
   { symbol: "NIFTY", current: "24,215", predicted: "24,800", change: "+2.4%", confidence: 82, trend: "up" },
   { symbol: "SENSEX", current: "78,096", predicted: "79,500", change: "+1.8%", confidence: 78, trend: "up" },
   { symbol: "BANKNIFTY", current: "52,340", predicted: "51,200", change: "-2.2%", confidence: 71, trend: "down" },
   { symbol: "NASDAQ", current: "22,695", predicted: "23,200", change: "+2.2%", confidence: 85, trend: "up" },
   { symbol: "BTC", current: "$92,415", predicted: "$98,000", change: "+6.0%", confidence: 76, trend: "up" },
-]
+])
 
-const sectorPredictions = [
+const [sectorPredictions, setSectorPredictions] = useState([
   { sector: "Technology", prediction: "Bullish", confidence: 84, target: "2 months" },
   { sector: "Banking", prediction: "Neutral", confidence: 62, target: "1 month" },
   { sector: "Energy", prediction: "Bullish", confidence: 78, target: "3 months" },
   { sector: "Pharma", prediction: "Bearish", confidence: 58, target: "1 month" },
   { sector: "Auto", prediction: "Bullish", confidence: 72, target: "2 months" },
-]
+])
+
+const [loading, setLoading] = useState(true)
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      // Fetch market data for predictions
+      const marketData = await getMarketData()
+      const sectorData = await getSectorData()
+      
+      if (Array.isArray(marketData) && marketData.length > 0) {
+        const mapped = marketData.slice(0, 5).map((item: Record<string, unknown>) => {
+          const changePct = Number(item.change_pct) || 0
+          const predicted = parseFloat(String(item.price || "0").replace(/,/g, "")) * (1 + changePct / 100)
+          return {
+            symbol: String(item.symbol || ""),
+            current: String(item.price || ""),
+            predicted: predicted.toLocaleString('en-US', { maximumFractionDigits: 2 }),
+            change: `${changePct >= 0 ? "+" : ""}${changePct.toFixed(1)}%`,
+            confidence: Math.min(95, Math.max(50, 70 + Math.abs(changePct) * 10)),
+            trend: changePct >= 0 ? "up" : "down"
+          }
+        })
+        setPredictions(mapped)
+      }
+      
+      if (Array.isArray(sectorData) && sectorData.length > 0) {
+        const mapped = sectorData.slice(0, 5).map((item: Record<string, unknown>) => {
+          const change = Number(item.change) || 0
+          return {
+            sector: String(item.name || ""),
+            prediction: change > 1 ? "Bullish" : change < -1 ? "Bearish" : "Neutral",
+            confidence: Math.min(95, Math.max(50, 60 + Math.abs(change) * 10)),
+            target: change > 1 ? "2 months" : change < -1 ? "1 month" : "1 month"
+          }
+        })
+        setSectorPredictions(mapped)
+      }
+    } catch (error) {
+      console.error("Failed to fetch predictions data:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+  fetchData()
+  
+  // Refresh every 60 seconds
+  const interval = setInterval(fetchData, 60000)
+  return () => clearInterval(interval)
+}, [])
 
 const historicalAccuracy = [
   { period: "Last Week", accuracy: 87 },

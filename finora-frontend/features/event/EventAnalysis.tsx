@@ -5,12 +5,24 @@ import Panel from "../../components/Panel"
 import { motion } from "framer-motion"
 import { analyzeEvent } from "../../services/api"
 import { Search, Zap } from "lucide-react"
+import type { FinoraAnalysis } from "../../types/finora"
 
-export default function EventAnalysis({setRegion}:any){
+type Props = {
+  setRegion?: (v: string) => void
+  onResult?: (analysis: FinoraAnalysis) => void
+}
+
+type MappedBars = {
+  raw: FinoraAnalysis
+  labels: string[]
+  scores: number[]
+}
+
+export default function EventAnalysis({ setRegion, onResult }: Props) {
 
   const [text, setText] = useState("")
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<MappedBars | null>(null)
 
  const analyze = async () => {
   if (!text.trim()) return
@@ -19,8 +31,23 @@ export default function EventAnalysis({setRegion}:any){
 
   try {
 
-    const result = await analyzeEvent(text)
-    setResult(result)
+    const data = await analyzeEvent(text)
+
+    // Keep UI unchanged: this component renders label bars. Map backend sector scores → {labels, scores}.
+    const sectorScores = data?.classification?.all_sector_scores || {}
+    const entries = Object.entries(sectorScores)
+      .filter(([, v]) => typeof v === "number")
+      .sort((a, b) => (b[1] as number) - (a[1] as number))
+      .slice(0, 8)
+
+    const mapped = {
+      raw: data,
+      labels: entries.map(([k]) => String(k).toUpperCase()),
+      scores: entries.map(([, v]) => Number(v)),
+    }
+
+    setResult(mapped)
+    if (onResult) onResult(mapped.raw)
 
   } catch (error) {
 
@@ -64,9 +91,9 @@ export default function EventAnalysis({setRegion}:any){
             className="mt-4 space-y-3"
           >
 
-            {result.labels && result.labels.map((label:any, i:number) => {
+            {result.labels && result.labels.map((label: string, i: number) => {
 
-              const width = (result.scores?.[i] || 0.5) * 100
+              const width = (result.scores?.[i] ?? 0.0) * 100
 
               return(
 

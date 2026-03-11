@@ -2,22 +2,18 @@
 
 import Panel from "../../components/Panel"
 import { motion } from "framer-motion"
+import type { FinoraAnalysis } from "../../types/finora"
 
-export default function HistoricalEvents() {
+export default function HistoricalEvents({ analysis }: { analysis: FinoraAnalysis | null }) {
 
-  const events = [
-    {
-      title: "Russia–Ukraine War (2022)",
-      impact: "Oil prices surged, energy stocks gained"
-    },
-    {
-      title: "OPEC Production Cuts (2016)",
-      impact: "Crude oil increased, airline stocks dropped"
-    },
-    {
-      title: "Global Financial Crisis (2008)",
-      impact: "Stock markets crashed, gold surged"
-    }
+  const parallels = analysis?.history_echo?.parallels || []
+  const events = parallels.slice(0, 5).map((p) => ({
+    title: `${p.event_date || "Unknown"} • ${String(p.sector || "").toUpperCase()}`,
+    impact: p.event_summary || "—"
+  }))
+
+  const fallback = [
+    { title: "No analysis yet", impact: "Run an event analysis to fetch similar historical events." }
   ]
 
   return (
@@ -26,7 +22,7 @@ export default function HistoricalEvents() {
 
       <div>
 
-        {events.map((event, i) => (
+        {(events.length ? events : fallback).map((event: { title: string; impact: string }, i: number) => (
 
           <motion.div
             key={i}

@@ -4,57 +4,84 @@ import { useState } from "react"
 import Panel from "../../components/Panel"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight, Clock, TrendingUp } from "lucide-react"
+import { useEffect } from "react"
+import { getNews } from "../../services/api"
 
 export default function NewsFeed(){
 
- const news = [
-  {
-   title:"Sensex jumps 600 points as markets rally on strong banking stocks",
-   source:"Moneycontrol",
-   time:"2h ago",
-   sentiment:"bullish",
-   image:"https://picsum.photos/800/400?1"
-  },
-  {
-   title:"Gold prices rise amid global uncertainty and Fed rate signals",
-   source:"CNBC",
-   time:"4h ago",
-   sentiment:"neutral",
-   image:"https://picsum.photos/800/400?2"
-  },
-  {
-   title:"Oil prices surge after Middle East supply concerns escalate",
-   source:"Reuters",
-   time:"5h ago",
-   sentiment:"bearish",
-   image:"https://picsum.photos/800/400?3"
-  },
-  {
-   title:"Bitcoin breaks $92K as institutional ETF inflows accelerate",
-   source:"CoinDesk",
-   time:"1h ago",
-   sentiment:"bullish",
-   image:"https://picsum.photos/800/400?4"
-  }
- ]
+ type NewsCard = { title: string; source: string; time: string; sentiment: "bullish" | "bearish" | "neutral"; image: string; _thumb: string }
+ type Headline = { text: string; time: string; source: string; image: string }
 
- // Headlines WITH IMAGES
- const headlines = [
-  { text: "Nifty crosses 24,200 on strong banking stocks", time: "10m ago", source: "ET Markets", image: "https://picsum.photos/100/100?11" },
-  { text: "Bitcoin rallies after ETF inflows surge", time: "25m ago", source: "CoinTelegraph", image: "https://picsum.photos/100/100?12" },
-  { text: "Oil climbs on Middle East tensions", time: "1h ago", source: "Reuters", image: "https://picsum.photos/100/100?13" },
-  { text: "Fed signals possible rate cuts this year", time: "2h ago", source: "Bloomberg", image: "https://picsum.photos/100/100?14" },
-  { text: "AI stocks continue strong rally", time: "3h ago", source: "CNBC", image: "https://picsum.photos/100/100?15" }
- ]
+ const [news, setNews] = useState<NewsCard[]>([])
+ const [headlines, setHeadlines] = useState<Headline[]>([])
+
+ function timeAgo(iso?: string){
+  if(!iso) return ""
+  try{
+   const d = new Date(iso)
+   const diff = Date.now() - d.getTime()
+   const m = Math.max(0, Math.floor(diff/60000))
+   if(m < 1) return "Just now"
+   if(m < 60) return `${m}m ago`
+   const h = Math.floor(m/60)
+   if(h < 24) return `${h}h ago`
+   const dd = Math.floor(h/24)
+   return `${dd}d ago`
+  }catch{
+   return ""
+  }
+ }
+
+ function imageFor(seed: string, w: number, h: number){
+  const safe = encodeURIComponent(seed.slice(0, 40))
+  return `https://picsum.photos/seed/${safe}/${w}/${h}`
+ }
+
+ function guessSentiment(title: string){
+  const t = (title || "").toLowerCase()
+  if(/surge|rally|jump|beats|record|gains|soar|up/.test(t)) return "bullish"
+  if(/crash|falls?|selloff|miss|down|plunge|slump|cut/.test(t)) return "bearish"
+  return "neutral"
+ }
+
+ useEffect(() => {
+  let mounted = true
+  ;(async () => {
+   try{
+    const data = await getNews()
+    if(!mounted) return
+    const items = Array.isArray(data) ? data : []
+    const mapped: NewsCard[] = items.map((n: unknown) => {
+      const obj = (typeof n === "object" && n) ? (n as Record<string, unknown>) : {}
+      const title = String(obj.title || "")
+      const source = String(obj.source || "")
+      const timestamp = typeof obj.timestamp === "string" ? obj.timestamp : ""
+      return {
+        title,
+        source,
+        time: timeAgo(timestamp),
+        sentiment: guessSentiment(title),
+        image: imageFor(`${source || "news"}-${title || ""}`, 800, 400),
+        _thumb: imageFor(`${source || "news"}-${title || ""}`, 100, 100),
+      }
+    })
+    setNews(mapped.slice(0, 6))
+    setHeadlines(mapped.slice(0, 8).map((x) => ({ text: x.title, time: x.time, source: x.source, image: x._thumb })))
+   }catch(_e){
+    // keep empty; UI will still render without breaking
+   }
+  })()
+  return () => { mounted = false }
+ }, [])
 
  const [index,setIndex] = useState(0)
 
  function next(){
-  setIndex((index+1)%news.length)
+  if(news.length) setIndex((index+1)%news.length)
  }
 
  function prev(){
-  setIndex((index-1+news.length)%news.length)
+  if(news.length) setIndex((index-1+news.length)%news.length)
  }
 
   return(
@@ -65,7 +92,7 @@ export default function NewsFeed(){
    <div className="relative mb-2">
     <AnimatePresence mode="wait">
      <motion.div
-      key={index}
+      key={news.length ? index : -1}
       initial={{ opacity: 0, x: 50 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
@@ -73,30 +100,36 @@ export default function NewsFeed(){
       transition={{ duration: 0.3 }}
       className="relative rounded-lg overflow-hidden"
      >
-      <img
-       src={news[index].image}
-       className="w-full h-[280px] object-cover"
-      />
+      {news.length ? (
+        <img
+         src={news[index].image}
+         className="w-full h-[280px] object-cover"
+        />
+      ) : (
+        <div className="w-full h-[280px] bg-white/5" />
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
       
       {/* Sentiment badge */}
-      <div className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-medium ${
-        news[index].sentiment === 'bullish' ? 'bg-green-500/20 text-green-400' :
-        news[index].sentiment === 'bearish' ? 'bg-red-500/20 text-red-400' :
-        'bg-yellow-500/20 text-yellow-400'
-      }`}>
-        {news[index].sentiment.toUpperCase()}
-      </div>
+      {news.length ? (
+        <div className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-medium ${
+          news[index].sentiment === 'bullish' ? 'bg-green-500/20 text-green-400' :
+          news[index].sentiment === 'bearish' ? 'bg-red-500/20 text-red-400' :
+          'bg-yellow-500/20 text-yellow-400'
+        }`}>
+          {news[index].sentiment.toUpperCase()}
+        </div>
+      ) : null}
 
       <div className="absolute bottom-0 left-0 right-0 p-3">
        <h3 className="text-sm font-medium text-gray-200 leading-snug">
-        {news[index].title}
+        {news.length ? news[index].title : "Loading news…"}
        </h3>
        <div className="flex items-center gap-2 mt-1 text-[10px] text-gray-300">
-        <span>{news[index].source}</span>
+        <span>{news.length ? news[index].source : ""}</span>
         <span className="flex items-center gap-1">
          <Clock className="w-2.5 h-2.5" />
-         {news[index].time}
+         {news.length ? news[index].time : ""}
         </span>
        </div>
       </div>

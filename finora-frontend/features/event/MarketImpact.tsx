@@ -3,14 +3,37 @@
 import Panel from "../../components/Panel"
 import { motion } from "framer-motion"
 import { TrendingUp, TrendingDown, Minus } from "lucide-react"
+import type { FinoraAnalysis } from "../../types/finora"
 
-export default function MarketImpact() {
+export default function MarketImpact({ analysis }: { analysis: FinoraAnalysis | null }) {
 
-  const impacts = [
-    { asset: "Gold", effect: "Positive", arrow: "↑", color: "text-green-400" },
-    { asset: "Crypto", effect: "Neutral", arrow: "→", color: "text-yellow-400" },
-    { asset: "Tech Stocks", effect: "Negative", arrow: "↓", color: "text-red-400" },
-    { asset: "Banking", effect: "Negative", arrow: "↓", color: "text-red-400" }
+  const changes: Record<string, number> = {}
+  const parallels = analysis?.history_echo?.parallels || []
+  if (parallels.length > 0) {
+    for (const p of parallels) {
+      const pc = p?.price_changes || {}
+      for (const [k, v] of Object.entries(pc)) {
+        if (typeof v === "number") changes[k] = (changes[k] || 0) + v
+      }
+    }
+    for (const k of Object.keys(changes)) changes[k] = changes[k] / parallels.length
+  }
+
+  const impacts = Object.entries(changes)
+    .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+    .slice(0, 4)
+    .map(([asset, v]) => {
+      const effect = v > 0.15 ? "Positive" : v < -0.15 ? "Negative" : "Neutral"
+      const arrow = v > 0.15 ? "↑" : v < -0.15 ? "↓" : "→"
+      const color = v > 0.15 ? "text-green-400" : v < -0.15 ? "text-red-400" : "text-yellow-400"
+      return { asset, effect, arrow, color }
+    })
+
+  const fallback = [
+    { asset: "Nifty 50", effect: "Neutral", arrow: "→", color: "text-yellow-400" },
+    { asset: "Bank Nifty", effect: "Neutral", arrow: "→", color: "text-yellow-400" },
+    { asset: "Gold", effect: "Neutral", arrow: "→", color: "text-yellow-400" },
+    { asset: "USD INR", effect: "Neutral", arrow: "→", color: "text-yellow-400" }
   ]
 
   return (
@@ -19,7 +42,7 @@ export default function MarketImpact() {
 
       <div className="space-y-2">
 
-        {impacts.map((item, i) => (
+        {(impacts.length ? impacts : fallback).map((item, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, x: 10 }}

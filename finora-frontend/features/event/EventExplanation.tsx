@@ -2,14 +2,27 @@
 
 import Panel from "../../components/Panel"
 import { motion } from "framer-motion"
+import type { FinoraAnalysis } from "../../types/finora"
 
-export default function EventExplanation(){
+export default function EventExplanation({ analysis }: { analysis: FinoraAnalysis | null }){
 
- const explanations = [
-  "Interest rate hikes reduce liquidity in equity markets.",
-  "Higher interest rates increase demand for safe-haven assets like gold.",
-  "Energy supply disruptions can push oil prices higher.",
-  "Rising oil prices increase operating costs for airline companies."
+ const explanations: string[] = []
+
+ const persona = analysis?.persona_summary
+ if (typeof persona === "string" && persona.trim()) {
+  explanations.push(...persona.split(/[.\n]/).map((s: string) => s.trim()).filter(Boolean).slice(0, 4))
+ }
+
+ const echo = analysis?.history_echo?.echo_summary
+ if (typeof echo === "string" && echo.trim()) explanations.push(echo.trim())
+
+ const domino = analysis?.domino_chain?.chain || []
+ for (const n of domino.slice(0, 3)) {
+  if (n?.reason) explanations.push(String(n.reason))
+ }
+
+ const fallback = [
+  "Run an event analysis to generate an explanation based on sentiment, historical parallels, and domino effects."
  ]
 
  return(
@@ -18,7 +31,7 @@ export default function EventExplanation(){
 
     <div className="space-y-2">
 
-      {explanations.map((item,index)=>(
+      {(explanations.length ? explanations.slice(0, 6) : fallback).map((item,index)=>(
 
         <motion.p 
           key={index}

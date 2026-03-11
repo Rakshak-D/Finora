@@ -3,14 +3,24 @@
 import Panel from "../../components/Panel"
 import { motion } from "framer-motion"
 import { Brain } from "lucide-react"
+import type { FinoraAnalysis } from "../../types/finora"
 
-export default function ConfidenceMeter(){
+export default function ConfidenceMeter({ analysis }: { analysis: FinoraAnalysis | null }){
 
- const predictions = [
-  {name:"Energy Sector ▲", confidence:82},
-  {name:"Banking Sector ▼", confidence:56},
-  {name:"Tech Sector ▼", confidence:34},
-  {name:"Gold ▲", confidence:71}
+ const sectorScores = analysis?.classification?.all_sector_scores || {}
+ const entries = Object.entries(sectorScores)
+  .filter(([, v]) => typeof v === "number")
+  .sort((a, b) => (b[1] as number) - (a[1] as number))
+  .slice(0, 4)
+
+ const predictions = entries.map(([name, score]) => {
+  const pct = Math.max(0, Math.min(100, Math.round(Number(score) * 100)))
+  const dir = name === analysis?.classification?.primary_sector ? "▲" : "→"
+  return { name: `${String(name).toUpperCase()} ${dir}`, confidence: pct }
+ })
+
+ const fallback = [
+  {name:"Run analysis to compute confidence", confidence:60}
  ]
 
  function getColor(confidence: number){
@@ -29,7 +39,7 @@ export default function ConfidenceMeter(){
 
   <div className="space-y-3">
 
-   {predictions.map((p,i)=>(
+   {(predictions.length ? predictions : fallback).map((p,i)=>(
     <motion.div
      key={i}
      initial={{ opacity: 0, x: -20 }}

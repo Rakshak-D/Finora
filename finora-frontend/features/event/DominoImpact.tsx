@@ -3,15 +3,21 @@
 import Panel from "../../components/Panel"
 import { motion } from "framer-motion"
 import { ArrowDown, Sparkles } from "lucide-react"
+import type { FinoraAnalysis } from "../../types/finora"
 
-export default function DominoImpact(){
+export default function DominoImpact({ analysis }: { analysis: FinoraAnalysis | null }){
+
+ const raw = analysis?.domino_chain?.chain || []
+ const trigger = analysis?.domino_chain?.trigger_sector || analysis?.classification?.primary_sector || "Event"
 
  const chain = [
-  {label:"Event", value:"Middle East Conflict", color:"#6366f1", icon: "⚡"},
-  {label:"Commodity", value:"Oil ▲", color:"#f59e0b", icon: "🛢️"},
-  {label:"Sector", value:"Energy Stocks ▲", color:"#22c55e", icon: "📈"},
-  {label:"Macro", value:"Inflation ▲", color:"#ef4444", icon: "📊"},
-  {label:"Market", value:"Banking ▼", color:"#ef4444", icon: "🏦"}
+  {label:"Event", value:String(trigger).toUpperCase(), color:"#6366f1", icon: "⚡"},
+  ...raw.slice(0, 4).map((n: { sector?: string; direction?: string }, idx: number) => {
+    const dir = n.direction === "up" ? "▲" : n.direction === "down" ? "▼" : "→"
+    const color = n.direction === "up" ? "#22c55e" : n.direction === "down" ? "#ef4444" : "#f59e0b"
+    const icon = n.direction === "up" ? "📈" : n.direction === "down" ? "📉" : "🧭"
+    return { label: `Impact ${idx + 1}`, value: `${String(n.sector || "").toUpperCase()} ${dir}`, color, icon }
+  })
  ]
 
  return(
@@ -23,7 +29,7 @@ export default function DominoImpact(){
    
    <div className="relative flex flex-col items-center gap-2">
 
-    {chain.map((item,i)=>(
+    {(chain.length > 1 ? chain : [{label:"Event", value:"Run analysis", color:"#6366f1", icon:"⚡"}]).map((item,i)=>(
      <motion.div
       key={i}
       initial={{ opacity: 0, x: -20 }}
@@ -54,7 +60,7 @@ export default function DominoImpact(){
        )}
       </div>
 
-      {i !== chain.length-1 && (
+      {i !== (chain.length > 1 ? chain.length : 1)-1 && (
        <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

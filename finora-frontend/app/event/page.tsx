@@ -12,7 +12,7 @@ import { Search, Zap, Brain, TrendingUp, Activity, Globe, BarChart2, Calendar, A
 export default function EventPage() {
 
 const [analyzedEvent, setAnalyzedEvent] = useState<string | null>(null)
-const [analysisResult, setAnalysisResult] = useState<any>(null)
+const [analysisResult, setAnalysisResult] = useState<{ sentiment: "Bullish" | "Bearish" | "Neutral"; confidence: number; sectors: string[]; impact: "Low" | "Medium" | "High" } | null>(null)
 const [loading, setLoading] = useState(false)
 
 const sampleEvents = [

@@ -2,21 +2,81 @@
 
 import Panel from "../../components/Panel"
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
+import { getSectorData } from "../../services/api"
+
+interface SectorItem {
+  name: string
+  change: number
+  market_cap: string
+}
 
 export default function SectorHeatmap(){
 
- const sectors = [
-  {name:"Technology", change:2.4, marketCap:"12.4T"},
-  {name:"Banking", change:-1.2, marketCap:"8.2T"},
-  {name:"Energy", change:1.1, marketCap:"4.8T"},
-  {name:"Auto", change:-0.6, marketCap:"3.1T"},
-  {name:"FMCG", change:0.8, marketCap:"5.6T"},
-  {name:"Pharma", change:1.7, marketCap:"2.9T"},
-  {name:"Metal", change:-0.9, marketCap:"1.8T"},
-  {name:"IT", change:2.1, marketCap:"9.4T"},
-  {name:"Real Estate", change:0.4, marketCap:"1.2T"},
-  {name:"Telecom", change:-0.3, marketCap:"2.1T"}
+ const [sectors, setSectors] = useState<SectorItem[]>([])
+ const [loading, setLoading] = useState(true)
+
+ useEffect(() => {
+   let mounted = true
+   
+   const fetchData = async () => {
+     try {
+       const data = await getSectorData()
+       if (mounted && Array.isArray(data)) {
+         const mapped: SectorItem[] = data.map((item: Record<string, unknown>) => ({
+           name: String(item.name || ""),
+           change: Number(item.change) || 0,
+           market_cap: String(item.market_cap || "")
+         }))
+         setSectors(mapped)
+       }
+     } catch (error) {
+       console.error("Failed to fetch sector data:", error)
+       if (mounted) {
+         setSectors([
+           { name: "Technology", change: 2.4, market_cap: "12.4T" },
+           { name: "Banking", change: -1.2, market_cap: "8.2T" },
+           { name: "Energy", change: 1.1, market_cap: "4.8T" },
+           { name: "Auto", change: -0.6, market_cap: "3.1T" },
+           { name: "FMCG", change: 0.8, market_cap: "5.6T" },
+           { name: "Pharma", change: 1.7, market_cap: "2.9T" },
+           { name: "Metal", change: -0.9, market_cap: "1.8T" },
+           { name: "IT", change: 2.1, market_cap: "9.4T" },
+           { name: "Real Estate", change: 0.4, market_cap: "1.2T" },
+           { name: "Telecom", change: -0.3, market_cap: "2.1T" }
+         ])
+       }
+     } finally {
+       if (mounted) setLoading(false)
+     }
+   }
+
+   fetchData()
+
+   // Refresh every 60 seconds
+   const interval = setInterval(fetchData, 60000)
+   
+   return () => {
+     mounted = false
+     clearInterval(interval)
+   }
+ }, [])
+
+ // Fallback data while loading
+ const fallbackSectors: SectorItem[] = [
+   { name: "Technology", change: 2.4, market_cap: "12.4T" },
+   { name: "Banking", change: -1.2, market_cap: "8.2T" },
+   { name: "Energy", change: 1.1, market_cap: "4.8T" },
+   { name: "Auto", change: -0.6, market_cap: "3.1T" },
+   { name: "FMCG", change: 0.8, market_cap: "5.6T" },
+   { name: "Pharma", change: 1.7, market_cap: "2.9T" },
+   { name: "Metal", change: -0.9, market_cap: "1.8T" },
+   { name: "IT", change: 2.1, market_cap: "9.4T" },
+   { name: "Real Estate", change: 0.4, market_cap: "1.2T" },
+   { name: "Telecom", change: -0.3, market_cap: "2.1T" }
  ]
+
+ const displaySectors = loading || sectors.length === 0 ? fallbackSectors : sectors
 
  function getColor(change:number){
   if(change >= 2) return "rgba(34, 197, 94, 0.9)"
@@ -40,7 +100,7 @@ export default function SectorHeatmap(){
 
    <div className="grid grid-cols-2 gap-2">
 
-    {sectors.map((s,i)=>(
+    {displaySectors.map((s,i)=>(
 
      <motion.div
       key={i}
@@ -72,7 +132,7 @@ export default function SectorHeatmap(){
       </p>
       
       <p className="text-[10px] text-white/70 mt-1">
-       {s.marketCap}
+       {s.market_cap}
       </p>
 
      </motion.div>

@@ -2,31 +2,88 @@
 
 import { motion } from "framer-motion"
 import { TrendingUp, TrendingDown } from "lucide-react"
+import { useEffect, useState } from "react"
+import { getMarketData } from "../services/api"
 
 interface MarketItem {
   symbol: string
+  name: string
   price: string
   change: string
+  change_pct: number
   isPositive: boolean
 }
 
 export default function MarketTicker(){
 
-  const items: MarketItem[] = [
-    { symbol: "NIFTY", price: "24,215", change: "+0.78%", isPositive: true },
-    { symbol: "SENSEX", price: "78,096", change: "+0.68%", isPositive: true },
-    { symbol: "NASDAQ", price: "22,695", change: "+1.38%", isPositive: true },
-    { symbol: "DOW", price: "47,740", change: "+0.50%", isPositive: true },
-    { symbol: "S&P 500", price: "6,120", change: "+0.82%", isPositive: true },
-    { symbol: "BTC", price: "$92,415", change: "+2.1%", isPositive: true },
-    { symbol: "ETH", price: "$3,240", change: "+1.8%", isPositive: true },
-    { symbol: "GOLD", price: "$2,156", change: "+0.9%", isPositive: true },
-    { symbol: "OIL", price: "$78.40", change: "-1.2%", isPositive: false },
-    { symbol: "SILVER", price: "$24.80", change: "+0.5%", isPositive: true },
+  const [items, setItems] = useState<MarketItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let mounted = true
+    
+    const fetchData = async () => {
+      try {
+        const data = await getMarketData()
+        if (mounted && Array.isArray(data)) {
+          const mapped: MarketItem[] = data.map((item: Record<string, unknown>) => ({
+            symbol: String(item.symbol || ""),
+            name: String(item.name || ""),
+            price: String(item.price || ""),
+            change: String(item.change || ""),
+            change_pct: Number(item.change_pct) || 0,
+            isPositive: Boolean(item.isPositive)
+          }))
+          setItems(mapped)
+        }
+      } catch (error) {
+        console.error("Failed to fetch market data:", error)
+        // Fallback to default data on error
+        if (mounted) {
+          setItems([
+            { symbol: "NIFTY", name: "Nifty 50", price: "24,215", change: "+189.45", change_pct: 0.78, isPositive: true },
+            { symbol: "SENSEX", name: "Sensex", price: "78,096", change: "+530.87", change_pct: 0.68, isPositive: true },
+            { symbol: "NASDAQ", name: "NASDAQ", price: "22,695", change: "+312.99", change_pct: 1.38, isPositive: true },
+            { symbol: "DOW", name: "Dow Jones", price: "47,740", change: "+238.70", change_pct: 0.50, isPositive: true },
+            { symbol: "SP500", name: "S&P 500", price: "6,120", change: "+50.23", change_pct: 0.82, isPositive: true },
+            { symbol: "BTC", name: "Bitcoin", price: "92,415", change: "+1,940.72", change_pct: 2.10, isPositive: true },
+            { symbol: "ETH", name: "Ethereum", price: "3,240", change: "+58.33", change_pct: 1.80, isPositive: true },
+            { symbol: "GOLD", name: "Gold", price: "2,156", change: "+19.41", change_pct: 0.90, isPositive: true },
+            { symbol: "OIL", name: "Crude Oil", price: "78.40", change: "-0.94", change_pct: -1.20, isPositive: false },
+            { symbol: "SILVER", name: "Silver", price: "24.80", change: "+0.12", change_pct: 0.50, isPositive: true },
+          ])
+        }
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+
+    fetchData()
+    
+    // Refresh every 60 seconds
+    const interval = setInterval(fetchData, 60000)
+    
+    return () => {
+      mounted = false
+      clearInterval(interval)
+    }
+  }, [])
+
+  // Fallback data while loading
+  const fallbackItems: MarketItem[] = [
+    { symbol: "NIFTY", name: "Nifty 50", price: "24,215", change: "+189.45", change_pct: 0.78, isPositive: true },
+    { symbol: "SENSEX", name: "Sensex", price: "78,096", change: "+530.87", change_pct: 0.68, isPositive: true },
+    { symbol: "NASDAQ", name: "NASDAQ", price: "22,695", change: "+312.99", change_pct: 1.38, isPositive: true },
+    { symbol: "DOW", name: "Dow Jones", price: "47,740", change: "+238.70", change_pct: 0.50, isPositive: true },
+    { symbol: "SP500", name: "S&P 500", price: "6,120", change: "+50.23", change_pct: 0.82, isPositive: true },
+    { symbol: "BTC", name: "Bitcoin", price: "92,415", change: "+1,940.72", change_pct: 2.10, isPositive: true },
+    { symbol: "ETH", name: "Ethereum", price: "3,240", change: "+58.33", change_pct: 1.80, isPositive: true },
+    { symbol: "GOLD", name: "Gold", price: "2,156", change: "+19.41", change_pct: 0.90, isPositive: true },
+    { symbol: "OIL", name: "Crude Oil", price: "78.40", change: "-0.94", change_pct: -1.20, isPositive: false },
+    { symbol: "SILVER", name: "Silver", price: "24.80", change: "+0.12", change_pct: 0.50, isPositive: true },
   ]
 
-  // Duplicate items for seamless loop
-  const displayItems = [...items, ...items, ...items]
+  const displayItems = loading ? fallbackItems : items.length > 0 ? [...items, ...items, ...items] : [...fallbackItems, ...fallbackItems, ...fallbackItems]
 
   return (
 

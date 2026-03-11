@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 
 import Topbar from "../components/Topbar"
@@ -19,19 +19,44 @@ import HistoricalEvents from "../features/event/HistoricalEvents"
 import EventExplanation from "../features/event/EventExplanation"
 import DominoImpact from "../features/event/DominoImpact"
 import ConfidenceMeter from "../features/event/ConfidenceMeter"
+import type { FinoraAnalysis } from "../types/finora"
+import { getStats } from "../services/api"
 
 import { Search, Zap, Brain, TrendingUp, Activity, Globe, BarChart2 } from "lucide-react"
 
 export default function Home() {
 
 const [region,setRegion] = useState("")
+const [analysis, setAnalysis] = useState<FinoraAnalysis | null>(null)
 
-const stats = [
+const [stats, setStats] = useState([
   { label: "AI Signals", value: "128", icon: Brain, color: "text-blue-400" },
   { label: "Markets Tracked", value: "42", icon: Globe, color: "text-cyan-400" },
   { label: "Events Detected", value: "19", icon: Activity, color: "text-purple-400" },
   { label: "Accuracy Rate", value: "86%", icon: TrendingUp, color: "text-green-400" }
-]
+])
+
+useEffect(() => {
+  const fetchStats = async () => {
+    try {
+      const data = await getStats()
+      setStats([
+        { label: "AI Signals", value: String(data.ai_signals || 128), icon: Brain, color: "text-blue-400" },
+        { label: "Markets Tracked", value: String(data.markets_tracked || 42), icon: Globe, color: "text-cyan-400" },
+        { label: "Events Detected", value: String(data.events_detected || 19), icon: Activity, color: "text-purple-400" },
+        { label: "Accuracy Rate", value: String(data.accuracy_rate || "86%"), icon: TrendingUp, color: "text-green-400" }
+      ])
+    } catch (error) {
+      console.error("Failed to fetch stats:", error)
+    }
+  }
+  
+  fetchStats()
+  
+  // Refresh stats every 60 seconds
+  const interval = setInterval(fetchStats, 60000)
+  return () => clearInterval(interval)
+}, [])
 
 // Animation variants for scroll reveal
 const revealVariants = {
@@ -178,7 +203,7 @@ return (
         variants={revealVariants}
         className="mb-6"
       >
-        <EventAnalysis setRegion={setRegion}/>
+        <EventAnalysis setRegion={setRegion} onResult={setAnalysis} />
       </motion.div>
 
       {/* CONFIDENCE METER - Full width */}
@@ -189,7 +214,7 @@ return (
         variants={revealVariants}
         className="mb-6"
       >
-        <ConfidenceMeter/>
+        <ConfidenceMeter analysis={analysis} />
       </motion.div>
 
       {/* HISTORICAL EVENTS - Full width */}
@@ -200,7 +225,7 @@ return (
         variants={revealVariants}
         className="mb-6"
       >
-        <HistoricalEvents/>
+        <HistoricalEvents analysis={analysis} />
       </motion.div>
 
       {/* MARKET IMPACT + EVENT EXPLANATION + DOMINO IMPACT - Grid layout */}
@@ -211,9 +236,9 @@ return (
         variants={revealVariants}
         className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6"
       >
-        <MarketImpact/>
-        <EventExplanation/>
-        <DominoImpact/>
+        <MarketImpact analysis={analysis} />
+        <EventExplanation analysis={analysis} />
+        <DominoImpact analysis={analysis} />
       </motion.div>
 
       {/* SECTOR HEATMAP - Full width */}

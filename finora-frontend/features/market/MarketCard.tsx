@@ -1,11 +1,14 @@
 "use client"
 
 import { TrendingUp, TrendingDown } from "lucide-react"
-import { motion } from "framer-motion"
 
-export default function MarketCard({title,value,change}:any){
+type Props = {
+  title: string
+  value: string
+  change: number
+}
 
-  const positive = change > 0
+export default function MarketCard({ title, value, change }: Props) {
 
   return(
 

@@ -3,68 +3,58 @@
 import { motion } from "framer-motion"
 import { TrendingUp, TrendingDown, Activity } from "lucide-react"
 import { useEffect, useState } from "react"
-import { getMarketData } from "../services/api"
 
-interface Market {
-  name: string
-  price: string
-  change: string
-  change_pct: number
-  up: boolean
-  data: number[]
+interface MarketData {
+  indices: Array<{
+    symbol: string
+    name: string
+    price: number
+    change: number
+    changePercent: number
+    volume: number
+    high: number
+    low: number
+  }>
+  last_updated: string
 }
 
-export default function MarketWatch(){
-
-  const [markets, setMarkets] = useState<Market[]>([])
+export default function MarketWatch() {
+  const [markets, setMarkets] = useState<MarketData['indices']>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let mounted = true
     
-    const fetchData = async () => {
+    async function fetchMarketData() {
       try {
-        const data = await getMarketData()
-        if (mounted && Array.isArray(data)) {
-          const mapped: Market[] = data.slice(0, 8).map((item: Record<string, unknown>, idx: number) => ({
-            name: String(item.name || ""),
-            price: String(item.price || ""),
-            change: String(item.change || ""),
-            change_pct: Number(item.change_pct) || 0,
-            up: Boolean(item.isPositive),
-            // Generate mock sparkline data based on change direction
-            data: Array.from({ length: 10 }, (_, i) => {
-              const base = 10 + idx
-              const trend = item.isPositive ? i * 0.5 : -i * 0.3
-              return base + trend + (Math.random() * 2 - 1)
-            })
-          }))
-          setMarkets(mapped)
+        const response = await fetch('/api/market-data')
+        if (!response.ok) {
+          throw new Error('Failed to fetch market data')
         }
-      } catch (error) {
-        console.error("Failed to fetch market data:", error)
-        // Fallback to default data on error
-        if (mounted) {
-          setMarkets([
-            { name: "NIFTY 50", price: "24,215.80", change: "+189.45", change_pct: 0.78, up: true, data: [10, 11, 12, 11, 13, 14, 15, 14, 15, 16] },
-            { name: "SENSEX", price: "78,096.45", change: "+530.87", change_pct: 0.68, up: true, data: [9, 10, 11, 10, 12, 13, 12, 13, 14, 13] },
-            { name: "NASDAQ", price: "22,695.32", change: "+312.99", change_pct: 1.38, up: true, data: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17] },
-            { name: "DOW JONES", price: "47,740.12", change: "+238.70", change_pct: 0.50, up: true, data: [10, 9, 10, 11, 10, 11, 12, 11, 12, 13] },
-            { name: "FTSE 100", price: "10,249.67", change: "-34.85", change_pct: -0.34, up: false, data: [14, 13, 12, 11, 10, 9, 8, 9, 8, 7] },
-            { name: "NIKKEI 225", price: "54,248.91", change: "+1,563.37", change_pct: 2.88, up: true, data: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16] },
-            { name: "BITCOIN", price: "92,415.00", change: "+1,940.72", change_pct: 2.10, up: true, data: [20, 22, 21, 23, 24, 25, 26, 28, 27, 29] },
-            { name: "GOLD", price: "2,156.40", change: "+19.41", change_pct: 0.90, up: true, data: [15, 16, 15, 16, 17, 16, 17, 18, 17, 18] }
-          ])
-        }
+        
+        const data: MarketData = await response.json()
+        
+        if (!mounted) return
+        
+        setMarkets(data.indices)
+        setError(null)
+      } catch (err) {
+        if (!mounted) return
+        console.error('Market watch error:', err)
+        setError('Using cached data')
+        setMarkets(getDefaultMarkets())
       } finally {
-        if (mounted) setLoading(false)
+        if (mounted) {
+          setLoading(false)
+        }
       }
     }
 
-    fetchData()
+    fetchMarketData()
     
     // Refresh every 60 seconds
-    const interval = setInterval(fetchData, 60000)
+    const interval = setInterval(fetchMarketData, 60000)
     
     return () => {
       mounted = false
@@ -72,19 +62,32 @@ export default function MarketWatch(){
     }
   }, [])
 
-  // Fallback data while loading
-  const fallbackMarkets: Market[] = [
-    { name: "NIFTY 50", price: "24,215.80", change: "+189.45", change_pct: 0.78, up: true, data: [10, 11, 12, 11, 13, 14, 15, 14, 15, 16] },
-    { name: "SENSEX", price: "78,096.45", change: "+530.87", change_pct: 0.68, up: true, data: [9, 10, 11, 10, 12, 13, 12, 13, 14, 13] },
-    { name: "NASDAQ", price: "22,695.32", change: "+312.99", change_pct: 1.38, up: true, data: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17] },
-    { name: "DOW JONES", price: "47,740.12", change: "+238.70", change_pct: 0.50, up: true, data: [10, 9, 10, 11, 10, 11, 12, 11, 12, 13] },
-    { name: "FTSE 100", price: "10,249.67", change: "-34.85", change_pct: -0.34, up: false, data: [14, 13, 12, 11, 10, 9, 8, 9, 8, 7] },
-    { name: "NIKKEI 225", price: "54,248.91", change: "+1,563.37", change_pct: 2.88, up: true, data: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16] },
-    { name: "BITCOIN", price: "92,415.00", change: "+1,940.72", change_pct: 2.10, up: true, data: [20, 22, 21, 23, 24, 25, 26, 28, 27, 29] },
-    { name: "GOLD", price: "2,156.40", change: "+19.41", change_pct: 0.90, up: true, data: [15, 16, 15, 16, 17, 16, 17, 18, 17, 18] }
-  ]
+  function getDefaultMarkets() {
+    return [
+      { symbol: "NIFTY", name: "NIFTY 50", price: 24215.80, change: 187.45, changePercent: 0.78, volume: 55000000, high: 24380.20, low: 23980.50 },
+      { symbol: "SENSEX", name: "SENSEX", price: 78096.45, change: 528.67, changePercent: 0.68, volume: 30000000, high: 78500.00, low: 77500.00 },
+      { symbol: "NASDAQ", name: "NASDAQ", price: 22695.32, change: 312.45, changePercent: 1.38, volume: 4500000000, high: 22900.00, low: 22400.00 },
+      { symbol: "DOW", name: "DOW JONES", price: 47740.12, change: 238.70, changePercent: 0.50, volume: 350000000, high: 48100.00, low: 47400.00 },
+      { symbol: "FTSE", name: "FTSE 100", price: 10249.67, change: -34.85, changePercent: -0.34, volume: 800000000, high: 10300.00, low: 10200.00 },
+      { symbol: "NIKKEI", name: "NIKKEI 225", price: 54248.91, change: 1517.46, changePercent: 2.88, volume: 0, high: 54500.00, low: 53000.00 },
+      { symbol: "BTC", name: "BITCOIN", price: 92415.00, change: 1940.72, changePercent: 2.10, volume: 35000000000, high: 94000.00, low: 90000.00 },
+      { symbol: "GOLD", name: "GOLD", price: 2156.40, change: 19.41, changePercent: 0.90, volume: 200000000, high: 2180.00, low: 2130.00 },
+    ]
+  }
 
-  const displayMarkets = loading || markets.length === 0 ? fallbackMarkets : markets
+  function formatPrice(price: number): string {
+    if (price >= 1000) {
+      return price.toLocaleString('en-IN', { maximumFractionDigits: 0 })
+    }
+    return price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  }
+
+  function formatChange(change: number, isPositive: boolean): string {
+    const sign = isPositive ? '+' : ''
+    return `${sign}${change.toFixed(2)}%`
+  }
+
+  const displayMarkets = markets.length > 0 ? markets : (loading ? getDefaultMarkets() : getDefaultMarkets())
 
   return (
     <motion.div
@@ -107,45 +110,43 @@ export default function MarketWatch(){
 
       {/* Markets List */}
       <div className="space-y-1">
-        {displayMarkets.map((m, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.3, delay: i * 0.05 }}
-            className="group flex items-center gap-2 p-1 rounded-lg hover:bg-white/5 transition-all cursor-pointer"
-          >
-            {/* Market Info */}
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-400 font-medium">{m.name}</p>
-              <p className="text-sm font-semibold text-white mono">
-                {m.price}
-              </p>
-            </div>
-
-            {/* Sparkline - Removed as per user request */}
-            
-            {/* Change */}
-            <div 
-              className={`flex items-center gap-0.5 text-xs font-bold min-w-[55px] justify-end ${
-                m.up ? 'text-green-400' : 'text-red-400'
-              }`}
+        {displayMarkets.map((m, i) => {
+          const isPositive = m.changePercent >= 0
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: i * 0.05 }}
+              className="group flex items-center gap-2 p-1 rounded-lg hover:bg-white/5 transition-all cursor-pointer"
             >
-              {m.up ? (
-                <TrendingUp className="w-2.5 h-2.5" />
-              ) : (
-                <TrendingDown className="w-2.5 h-2.5" />
-              )}
-              <span className="mono text-[10px]">{m.change}</span>
-            </div>
-          </motion.div>
-        ))}
+              {/* Market Info */}
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-gray-400 font-medium">{m.name}</p>
+                <p className="text-sm font-semibold text-white mono">
+                  {formatPrice(m.price)}
+                </p>
+              </div>
+
+              {/* Change */}
+              <div 
+                className={`flex items-center gap-0.5 text-xs font-bold min-w-[55px] justify-end ${
+                  isPositive ? 'text-green-400' : 'text-red-400'
+                }`}
+              >
+                {isPositive ? (
+                  <TrendingUp className="w-2.5 h-2.5" />
+                ) : (
+                  <TrendingDown className="w-2.5 h-2.5" />
+                )}
+                <span className="mono text-[10px]">{formatChange(m.changePercent, isPositive)}</span>
+              </div>
+            </motion.div>
+          )
+        })}
       </div>
-
     </motion.div>
-
   )
-
 }
 

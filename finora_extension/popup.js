@@ -119,7 +119,7 @@ async function silentScrapeActiveTab() {
       input.style.borderColor = "var(--accent)";
       setTimeout(() => (input.style.borderColor = ""), 1400);
     }
-  } catch (_) {}
+  } catch (_) { }
 }
 
 // ── Analyse panel ─────────────────────────────────────────────────────────────
@@ -127,6 +127,30 @@ async function silentScrapeActiveTab() {
 function setupAnalysePanel() {
   document.getElementById("analyseBtn").addEventListener("click", runAnalysis);
 }
+
+// Add after setupAnalysePanel()
+document.getElementById('scrapeBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('scrapeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '...';
+
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        const title = document.querySelector('h1')?.innerText || document.title;
+        const article = document.querySelector('article')?.innerText || '';
+        return (title + ' ' + article).substring(0, 500);
+      }
+    });
+    const text = results?.[0]?.result || '';
+    if (text) document.getElementById('headlineInput').value = text;
+  } catch (e) { console.error(e); }
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/></svg>';
+});
 
 async function runAnalysis() {
   const text = document.getElementById("headlineInput").value.trim();

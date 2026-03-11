@@ -3,65 +3,71 @@
 import { motion } from "framer-motion"
 import { TrendingUp, TrendingDown } from "lucide-react"
 import { useEffect, useState } from "react"
-import { getMarketData } from "../services/api"
 
 interface MarketItem {
   symbol: string
-  name: string
   price: string
   change: string
-  change_pct: number
   isPositive: boolean
 }
 
-export default function MarketTicker(){
+interface MarketData {
+  indices: Array<{
+    symbol: string
+    name: string
+    price: number
+    change: number
+    changePercent: number
+  }>
+  last_updated: string
+}
 
+export default function MarketTicker() {
   const [items, setItems] = useState<MarketItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let mounted = true
     
-    const fetchData = async () => {
+    async function fetchMarketData() {
       try {
-        const data = await getMarketData()
-        if (mounted && Array.isArray(data)) {
-          const mapped: MarketItem[] = data.map((item: Record<string, unknown>) => ({
-            symbol: String(item.symbol || ""),
-            name: String(item.name || ""),
-            price: String(item.price || ""),
-            change: String(item.change || ""),
-            change_pct: Number(item.change_pct) || 0,
-            isPositive: Boolean(item.isPositive)
-          }))
-          setItems(mapped)
+        const response = await fetch('/api/market-data')
+        if (!response.ok) {
+          throw new Error('Failed to fetch market data')
         }
-      } catch (error) {
-        console.error("Failed to fetch market data:", error)
-        // Fallback to default data on error
-        if (mounted) {
-          setItems([
-            { symbol: "NIFTY", name: "Nifty 50", price: "24,215", change: "+189.45", change_pct: 0.78, isPositive: true },
-            { symbol: "SENSEX", name: "Sensex", price: "78,096", change: "+530.87", change_pct: 0.68, isPositive: true },
-            { symbol: "NASDAQ", name: "NASDAQ", price: "22,695", change: "+312.99", change_pct: 1.38, isPositive: true },
-            { symbol: "DOW", name: "Dow Jones", price: "47,740", change: "+238.70", change_pct: 0.50, isPositive: true },
-            { symbol: "SP500", name: "S&P 500", price: "6,120", change: "+50.23", change_pct: 0.82, isPositive: true },
-            { symbol: "BTC", name: "Bitcoin", price: "92,415", change: "+1,940.72", change_pct: 2.10, isPositive: true },
-            { symbol: "ETH", name: "Ethereum", price: "3,240", change: "+58.33", change_pct: 1.80, isPositive: true },
-            { symbol: "GOLD", name: "Gold", price: "2,156", change: "+19.41", change_pct: 0.90, isPositive: true },
-            { symbol: "OIL", name: "Crude Oil", price: "78.40", change: "-0.94", change_pct: -1.20, isPositive: false },
-            { symbol: "SILVER", name: "Silver", price: "24.80", change: "+0.12", change_pct: 0.50, isPositive: true },
-          ])
-        }
+        
+        const data: MarketData = await response.json()
+        
+        if (!mounted) return
+
+        // Transform API response to ticker items
+        const tickerItems: MarketItem[] = data.indices.map((idx) => ({
+          symbol: idx.symbol,
+          price: formatPrice(idx.price),
+          change: `${idx.changePercent >= 0 ? '+' : ''}${idx.changePercent.toFixed(2)}%`,
+          isPositive: idx.changePercent >= 0
+        }))
+        
+        setItems(tickerItems)
+        setError(null)
+      } catch (err) {
+        if (!mounted) return
+        console.error('Market ticker error:', err)
+        setError('Using cached data')
+        // Fallback to default items
+        setItems(getDefaultItems())
       } finally {
-        if (mounted) setLoading(false)
+        if (mounted) {
+          setLoading(false)
+        }
       }
     }
 
-    fetchData()
+    fetchMarketData()
     
     // Refresh every 60 seconds
-    const interval = setInterval(fetchData, 60000)
+    const interval = setInterval(fetchMarketData, 60000)
     
     return () => {
       mounted = false
@@ -69,24 +75,35 @@ export default function MarketTicker(){
     }
   }, [])
 
-  // Fallback data while loading
-  const fallbackItems: MarketItem[] = [
-    { symbol: "NIFTY", name: "Nifty 50", price: "24,215", change: "+189.45", change_pct: 0.78, isPositive: true },
-    { symbol: "SENSEX", name: "Sensex", price: "78,096", change: "+530.87", change_pct: 0.68, isPositive: true },
-    { symbol: "NASDAQ", name: "NASDAQ", price: "22,695", change: "+312.99", change_pct: 1.38, isPositive: true },
-    { symbol: "DOW", name: "Dow Jones", price: "47,740", change: "+238.70", change_pct: 0.50, isPositive: true },
-    { symbol: "SP500", name: "S&P 500", price: "6,120", change: "+50.23", change_pct: 0.82, isPositive: true },
-    { symbol: "BTC", name: "Bitcoin", price: "92,415", change: "+1,940.72", change_pct: 2.10, isPositive: true },
-    { symbol: "ETH", name: "Ethereum", price: "3,240", change: "+58.33", change_pct: 1.80, isPositive: true },
-    { symbol: "GOLD", name: "Gold", price: "2,156", change: "+19.41", change_pct: 0.90, isPositive: true },
-    { symbol: "OIL", name: "Crude Oil", price: "78.40", change: "-0.94", change_pct: -1.20, isPositive: false },
-    { symbol: "SILVER", name: "Silver", price: "24.80", change: "+0.12", change_pct: 0.50, isPositive: true },
-  ]
+  function formatPrice(price: number): string {
+    if (price >= 1000) {
+      return price.toLocaleString('en-IN', { maximumFractionDigits: 0 })
+    }
+    return price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  }
 
-  const displayItems = loading ? fallbackItems : items.length > 0 ? [...items, ...items, ...items] : [...fallbackItems, ...fallbackItems, ...fallbackItems]
+  function getDefaultItems(): MarketItem[] {
+    return [
+      { symbol: "NIFTY", price: "24,215", change: "+0.78%", isPositive: true },
+      { symbol: "SENSEX", price: "78,096", change: "+0.68%", isPositive: true },
+      { symbol: "NASDAQ", price: "22,695", change: "+1.38%", isPositive: true },
+      { symbol: "DOW", price: "47,740", change: "+0.50%", isPositive: true },
+      { symbol: "S&P 500", price: "6,120", change: "+0.82%", isPositive: true },
+      { symbol: "BTC", price: "$92,415", change: "+2.1%", isPositive: true },
+      { symbol: "ETH", price: "$3,240", change: "+1.8%", isPositive: true },
+      { symbol: "GOLD", price: "$2,156", change: "+0.9%", isPositive: true },
+      { symbol: "OIL", price: "$78.40", change: "-1.2%", isPositive: false },
+      { symbol: "SILVER", price: "$24.80", change: "+0.5%", isPositive: true },
+    ]
+  }
+
+  // Use default items while loading if no error items available
+  const displayItems = items.length > 0 ? items : (loading ? getDefaultItems() : items)
+  
+  // Duplicate items for seamless loop
+  const tickerItems = [...displayItems, ...displayItems, ...displayItems]
 
   return (
-
     <div className="relative overflow-hidden border-y border-white/5 bg-black/20">
       {/* Gradient masks for edges */}
       <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[#020617] to-transparent z-10" />
@@ -98,7 +115,7 @@ export default function MarketTicker(){
           width: 'fit-content'
         }}
       >
-        {displayItems.map((item, i) => (
+        {tickerItems.map((item, i) => (
           <motion.div
             key={i}
             className="flex items-center gap-3 px-4 py-1 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-default"
@@ -128,8 +145,6 @@ export default function MarketTicker(){
         ))}
       </motion.div>
     </div>
-
   )
-
 }
 

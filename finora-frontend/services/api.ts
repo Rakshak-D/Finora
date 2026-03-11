@@ -32,14 +32,12 @@ export async function analyzeEventAPI(text: string, persona?: InvestorPersona | 
   return analyzeEvent(text, persona)
 }
 
-// Market Impact Prediction - Uses analyze_event result
-export async function getMarketImpact(eventId?: string) {
-  // This now returns data from analyze_event which contains market impact
-  // For standalone use without event analysis, we call market-data
+// Market Data - Returns indices and major assets
+export async function getMarketData() {
   const res = await fetch(`${API_URL}/api/market-data`)
 
   if (!res.ok) {
-    throw new Error("Market impact request failed")
+    throw new Error("Market data request failed")
   }
 
   return res.json()
@@ -56,19 +54,8 @@ export async function getNews() {
   return res.json()
 }
 
-// Market Data (Indices, stocks, etc.)
-export async function getMarketData() {
-  const res = await fetch(`${API_URL}/api/market-data`)
-
-  if (!res.ok) {
-    throw new Error("Market data request failed")
-  }
-
-  return res.json()
-}
-
 // Historical Events
-export async function getHistoricalEvents(limit: number = 10) {
+export async function getHistoricalEvents(limit: number = 20) {
   const res = await fetch(`${API_URL}/api/historical-events?limit=${limit}`)
 
   if (!res.ok) {
@@ -78,7 +65,7 @@ export async function getHistoricalEvents(limit: number = 10) {
   return res.json()
 }
 
-// Sector Performance
+// Sector Performance Data
 export async function getSectorData() {
   const res = await fetch(`${API_URL}/api/sector-data`)
 
@@ -89,17 +76,37 @@ export async function getSectorData() {
   return res.json()
 }
 
-// Domino Impact Chain - Returns from analyze_event response
-export async function getDominoImpact(eventId?: string) {
-  // Domino impact is part of the analyze_event response
-  // This endpoint provides a way to get it separately if needed
+// Market Impact - Uses analyze_event endpoint
+export async function getMarketImpact(eventId: string) {
+  // Use the analyze_event endpoint to get market impact
+  // The eventId could be used to fetch a specific event analysis
   const res = await fetch(`${API_URL}/api/analyze_event`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      event: { text: "Get domino impact", deep_analysis: true },
+      event: { text: eventId, deep_analysis: true },
+      persona: null
+    })
+  })
+
+  if (!res.ok) {
+    throw new Error("Market impact request failed")
+  }
+
+  return res.json()
+}
+
+// Domino Impact - Uses analyze_event endpoint  
+export async function getDominoImpact(eventId: string) {
+  const res = await fetch(`${API_URL}/api/analyze_event`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      event: { text: eventId, deep_analysis: true },
       persona: null
     })
   })
@@ -108,20 +115,18 @@ export async function getDominoImpact(eventId?: string) {
     throw new Error("Domino impact request failed")
   }
 
-  const data = await res.json()
-  return data.domino_chain || null
+  return res.json()
 }
 
-// AI Confidence Scores - Returns from analyze_event response
+// AI Confidence Scores - Uses analyze_event endpoint
 export async function getConfidenceScores() {
-  // Confidence is part of the classification in analyze_event response
   const res = await fetch(`${API_URL}/api/analyze_event`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      event: { text: "Get confidence scores", deep_analysis: true },
+      event: { text: "market analysis", deep_analysis: true },
       persona: null
     })
   })
@@ -130,43 +135,24 @@ export async function getConfidenceScores() {
     throw new Error("Confidence scores request failed")
   }
 
-  const data = await res.json()
-  return data.classification || { confidence: 0 }
+  return res.json()
 }
 
-// Market Predictions - Returns from analyze_event response
+// Market Predictions - Uses analyze_event endpoint
 export async function getPredictions() {
-  // Predictions are part of the analyze_event response
   const res = await fetch(`${API_URL}/api/analyze_event`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      event: { text: "Get predictions", deep_analysis: true },
+      event: { text: "market prediction", deep_analysis: true },
       persona: null
     })
   })
 
   if (!res.ok) {
     throw new Error("Predictions request failed")
-  }
-
-  const data = await res.json()
-  return {
-    signal_score: data.signal_score,
-    sentiment: data.sentiment,
-    classification: data.classification,
-    history_echo: data.history_echo
-  }
-}
-
-// Dashboard Stats
-export async function getStats() {
-  const res = await fetch(`${API_URL}/api/stats`)
-
-  if (!res.ok) {
-    throw new Error("Stats request failed")
   }
 
   return res.json()
@@ -183,7 +169,7 @@ export async function healthCheck() {
   return res.json()
 }
 
-// Config - Get app configuration
+// Config - Get application configuration
 export async function getConfig() {
   const res = await fetch(`${API_URL}/api/config`)
 

@@ -5,6 +5,7 @@ import Panel from "../../components/Panel"
 import { motion } from "framer-motion"
 import { Settings, Maximize2, RefreshCw } from "lucide-react"
 import { useEffect, useState } from "react"
+import { getMarketData } from "../../services/api"
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false })
 
@@ -56,12 +57,7 @@ export default function MarketChart({ asset = "Nifty", timeframe = "1D" }: Marke
       let basePrice = 24215.80; // Default Nifty 50 price
 
       try {
-        const response = await fetch('/api/market-data')
-        if (!response.ok) {
-          throw new Error('Failed to fetch market data')
-        }
-
-        const data: MarketData = await response.json()
+        const data = await getMarketData() as MarketData
 
         if (!mounted) return
 

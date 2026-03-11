@@ -38,7 +38,7 @@ def classify_event(text: str) -> ClassificationResult:
     reverse_map = {v: k for k, v in label_map.items()}
     candidate_labels = list(label_map.values())
 
-    sector_res = classifier(text, candidate_labels=candidate_labels, multi_label=True)
+    sector_res = classifier(text, candidate_labels=candidate_labels, multi_label=False)
     primary_sector_long = sector_res["labels"][0]
     primary_sector = reverse_map[primary_sector_long]
     

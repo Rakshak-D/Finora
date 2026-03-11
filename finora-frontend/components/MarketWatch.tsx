@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { TrendingUp, TrendingDown, Activity } from "lucide-react"
 import { useEffect, useState } from "react"
+import { getMarketData } from "../services/api"
 
 interface MarketData {
   indices: Array<{
@@ -28,12 +29,7 @@ export default function MarketWatch() {
 
     async function fetchMarketData() {
       try {
-        const response = await fetch('/api/market-data')
-        if (!response.ok) {
-          throw new Error('Failed to fetch market data')
-        }
-
-        const data: MarketData = await response.json()
+        const data = await getMarketData() as MarketData
 
         if (!mounted) return
 

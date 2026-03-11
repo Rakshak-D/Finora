@@ -3,6 +3,7 @@
 import Panel from "../../components/Panel"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
+import { getSectorData } from "../../services/api"
 
 interface SectorData {
   sectors: Array<{
@@ -28,12 +29,7 @@ export default function SectorHeatmap() {
 
     async function fetchSectorData() {
       try {
-        const response = await fetch('/api/sector-data')
-        if (!response.ok) {
-          throw new Error('Failed to fetch sector data')
-        }
-
-        const data: SectorData = await response.json()
+        const data = await getSectorData() as SectorData
 
         if (!mounted) return
 

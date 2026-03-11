@@ -22,6 +22,7 @@ import ConfidenceMeter from "../features/event/ConfidenceMeter"
 import type { FinoraAnalysis } from "../types/finora"
 
 import { Search, Zap, Brain, TrendingUp, Activity, Globe, BarChart2 } from "lucide-react"
+import { getConfig, getSectorData, getHistoricalEvents } from "../services/api"
 
 // Stats from API
 interface DashboardStats {
@@ -49,10 +50,10 @@ export default function Home() {
     async function fetchDashboardData() {
       try {
         // Fetch multiple endpoints in parallel
-        const [configRes, sectorRes, historicalRes] = await Promise.all([
-          fetch('/api/config').catch(() => null),
-          fetch('/api/sector-data').catch(() => null),
-          fetch('/api/historical-events?limit=50').catch(() => null)
+        const [config, sectorData, historicalData] = await Promise.all([
+          getConfig().catch(() => null),
+          getSectorData().catch(() => null),
+          getHistoricalEvents(50).catch(() => null)
         ])
 
         if (!mounted) return
@@ -63,20 +64,17 @@ export default function Home() {
         let accuracyRate = 86
 
         // Get config data
-        if (configRes?.ok) {
-          const config = await configRes.json()
+        if (config) {
           marketsTracked = config.tracked_assets?.length || 10
         }
 
         // Get sector count for events detected
-        if (sectorRes?.ok) {
-          const sectorData = await sectorRes.json()
+        if (sectorData) {
           eventsDetected = sectorData.sectors?.length || 10
         }
 
         // Get historical events count for AI signals
-        if (historicalRes?.ok) {
-          const historicalData = await historicalRes.json()
+        if (historicalData) {
           aiSignals = historicalData.count || 50
         }
 
@@ -123,8 +121,8 @@ export default function Home() {
   // Animation variants for scroll reveal
   const revealVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: { duration: 0.5 }
     }
@@ -140,8 +138,8 @@ export default function Home() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 10 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: { duration: 0.3 }
     }
@@ -160,16 +158,16 @@ export default function Home() {
       </div>
 
       {/* LEFT SIDEBAR - Contains Global Markets & Global Indices */}
-      <Sidebar/>
+      <Sidebar />
 
       {/* MAIN DASHBOARD */}
       <div className="flex-1 relative z-10 overflow-y-auto">
-        <Topbar/>
+        <Topbar />
         <div className="p-2 lg:p-3">
-          <MarketTicker/>
+          <MarketTicker />
 
           {/* HERO INTELLIGENCE PANEL */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
@@ -178,12 +176,12 @@ export default function Home() {
             {/* Glow effect */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-cyan-500/10 rounded-full blur-3xl" />
-            
+
             <div className="relative z-10">
               {/* Title Row - FINORA IN CAPS with Orbitron font */}
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="w-4 h-4 text-blue-400" />
-                <h1 
+                <h1
                   className="text-base lg:text-lg font-black tracking-[0.2em] uppercase bg-gradient-to-r from-white via-blue-200 to-gray-400 bg-clip-text text-transparent"
                   style={{ fontFamily: 'var(--font-orbitron), sans-serif' }}
                 >
@@ -207,7 +205,7 @@ export default function Home() {
               </div>
 
               {/* Stats Cards - Very Compact */}
-              <motion.div 
+              <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -238,7 +236,7 @@ export default function Home() {
             variants={revealVariants}
             className="mb-6"
           >
-            <MarketChart/>
+            <MarketChart />
           </motion.div>
 
           {/* MARKET NEWS - Full width with proper spacing */}
@@ -249,7 +247,7 @@ export default function Home() {
             variants={revealVariants}
             className="mb-6"
           >
-            <NewsFeed/>
+            <NewsFeed />
           </motion.div>
 
           {/* EVENT ANALYSIS - Full width */}
@@ -306,7 +304,7 @@ export default function Home() {
             variants={revealVariants}
             className="mb-6"
           >
-            <SectorHeatmap/>
+            <SectorHeatmap />
           </motion.div>
 
           {/* FOOTER - Consistent Finora branding */}
@@ -323,7 +321,7 @@ export default function Home() {
                   <BarChart2 className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <p 
+                  <p
                     className="text-sm font-black tracking-[0.15em] uppercase"
                     style={{ fontFamily: 'var(--font-orbitron), sans-serif' }}
                   >

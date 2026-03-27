@@ -1,4 +1,4 @@
-import hashlib, json, logging, re, time
+import json, logging, re, time
 from datetime import datetime
 from urllib.parse import urljoin
 import feedparser, requests
@@ -52,7 +52,7 @@ def get_financial_news(target_count=45):
                         "title": _clean(entry.get("title", "No Title")),
                         "summary": _clean(summary)[:300],
                         "url": link,
-                        "timestamp": datetime.now().isoformat()
+                        "timestamp": entry.get("published") or entry.get("updated") or datetime.now().isoformat()
                     })
 
         if len(final_data) < target_count and "scrape" in cfg:

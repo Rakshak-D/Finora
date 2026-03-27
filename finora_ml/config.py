@@ -4,7 +4,9 @@ config.py — Central config for Finora ML layer.
 
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
+import torch
 
 # .env is at Finora/.env
 # config.py is at Finora/finora_ml/config.py
@@ -12,13 +14,49 @@ from dotenv import load_dotenv
 ROOT_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(ROOT_DIR / ".env", override=True)
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+
+def _env_flag(name: str, default: bool = False) -> bool:
+    raw_value = os.getenv(name)
+    if raw_value is None:
+        return default
+    return raw_value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _env_list(name: str, default: list[str]) -> list[str]:
+    raw_value = os.getenv(name, "")
+    if not raw_value.strip():
+        return default
+    return [item.strip() for item in raw_value.split(",") if item.strip()]
+
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY", "")
+UPSTOX_ACCESS_TOKEN = os.getenv("UPSTOX_ACCESS_TOKEN", "")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY", "")
+ALLOW_ALL_CORS = _env_flag("ALLOW_ALL_CORS", default=False)
+ALLOWED_ORIGINS = _env_list(
+    "ALLOWED_ORIGINS",
+    [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
+    ],
+)
+ENABLE_MODEL_FALLBACKS = _env_flag("ENABLE_MODEL_FALLBACKS", default=True)
+MODEL_WARMUP_ON_STARTUP = _env_flag("MODEL_WARMUP_ON_STARTUP", default=True)
+CUDA_VISIBLE = torch.cuda.is_available() and not _env_flag("DISABLE_CUDA", default=False)
+TORCH_DEVICE = "cuda:0" if CUDA_VISIBLE else "cpu"
+TORCH_DEVICE_INDEX = 0 if CUDA_VISIBLE else -1
+TORCH_DTYPE = torch.float16 if CUDA_VISIBLE else torch.float32
+ENABLE_GPU = CUDA_VISIBLE
+CUDA_DEVICE_NAME = torch.cuda.get_device_name(0) if CUDA_VISIBLE else ""
+CUDA_DEVICE_COUNT = torch.cuda.device_count() if CUDA_VISIBLE else 0
 
 # ─── Model Names ───────────────────────────────────────────────────────────────
 FINBERT_MODEL = "ProsusAI/finbert"
 BART_MODEL    = "facebook/bart-large-mnli"
 BGE_MODEL     = "BAAI/bge-large-en-v1.5"
-GEMINI_MODEL  = "gemini-2.5-flash"
+GEMINI_MODEL  = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip() or "gemini-2.5-flash"
 
 # ─── ChromaDB ──────────────────────────────────────────────────────────────────
 CHROMA_PERSIST_DIR     = "./chroma_db"

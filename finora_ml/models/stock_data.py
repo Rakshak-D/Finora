@@ -208,18 +208,26 @@ def get_top_movers(limit: int = 10) -> Dict[str, List[Dict]]:
     Returns:
         Dictionary with 'gainers' and 'losers' lists
     """
-    # For now, return sample data - can be expanded with live data
+    movers: List[Dict[str, Any]] = []
+    for symbol, ticker in INDIAN_STOCKS.items():
+        quote = get_stock_quote(ticker)
+        if not quote:
+            continue
+        prev_close = quote.get("previous_close") or 0
+        current_price = quote.get("current_price") or 0
+        if not prev_close or not current_price:
+            continue
+        change_pct = ((current_price - prev_close) / prev_close) * 100
+        movers.append({
+            "symbol": symbol,
+            "name": quote.get("name") or symbol,
+            "change_pct": round(change_pct, 2),
+        })
+
+    ordered = sorted(movers, key=lambda item: item["change_pct"], reverse=True)
     return {
-        "gainers": [
-            {"symbol": "ADANIPORTS", "name": "Adani Ports", "change_pct": 5.2},
-            {"symbol": "HINDUNILVR", "name": "Hindustan Unilever", "change_pct": 3.8},
-            {"symbol": "INFY", "name": "Infosys", "change_pct": 2.9},
-        ],
-        "losers": [
-            {"symbol": "BAJAJFINSV", "name": "Bajaj Finserv", "change_pct": -4.2},
-            {"symbol": "ADANI", "name": "Adani Enterprises", "change_pct": -3.5},
-            {"symbol": "TITAN", "name": "Titan Company", "change_pct": -2.1},
-        ]
+        "gainers": ordered[:limit],
+        "losers": list(reversed(ordered[-limit:])),
     }
 
 

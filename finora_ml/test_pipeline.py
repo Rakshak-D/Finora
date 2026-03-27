@@ -8,9 +8,11 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import unittest
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 from finora_ml.api import app
+from finora_ml.models.gemini_client import get_gemini_analysis
 from finora_ml.pipeline import run_event_pipeline, setup_pipeline
 from finora_ml.schemas import EventInput, InvestorPersona, Sector
 
@@ -74,6 +76,23 @@ class TestFinoraMLPipeline(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.json(), list)
 
+    def test_api_news_live_paginated(self):
+        response = client.get("/api/news/live?page=1&page_size=2")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn("items", data)
+        self.assertIn("meta", data)
+        self.assertEqual(data["meta"]["page"], 1)
+        self.assertEqual(data["meta"]["page_size"], 2)
+
+    def test_api_historical_events_paginated(self):
+        response = client.get("/api/historical-events?page=1&page_size=3")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn("items", data)
+        self.assertIn("meta", data)
+        self.assertEqual(data["meta"]["page_size"], 3)
+
     def test_api_analyze_event(self):
         payload  = {"event": {"text": "Tesla announces India factory expansion.", "deep_analysis": False}}
         response = client.post("/api/analyze_event", json=payload)
@@ -85,6 +104,14 @@ class TestFinoraMLPipeline(unittest.TestCase):
         # Ensure avg_asset_impacts is present
         if data["history_echo"]:
             self.assertIn("avg_asset_impacts", data["history_echo"])
+
+    def test_api_analyze_event_validation_error_shape(self):
+        payload = {"event": {"text": "short", "deep_analysis": False}}
+        response = client.post("/api/analyze_event", json=payload)
+        self.assertEqual(response.status_code, 422)
+        data = response.json()
+        self.assertIn("error", data)
+        self.assertIn("code", data["error"])
 
     def test_api_portfolio_impact(self):
         payload = {
@@ -99,6 +126,21 @@ class TestFinoraMLPipeline(unittest.TestCase):
         self.assertIn("asset_impacts", data)
         self.assertGreaterEqual(data["overall_signal"], 0.0)
         self.assertLessEqual(data["overall_signal"], 1.0)
+
+    @patch("finora_ml.models.gemini_client.get_gemini_client", return_value=None)
+    def test_gemini_local_fallback_is_user_friendly(self, _mock_client):
+        domino_chain, persona_summary = get_gemini_analysis(
+            text="RBI unexpectedly tightens liquidity and bank stocks react sharply.",
+            primary_sector="banking",
+            sentiment="negative",
+            persona_sectors=["banking", "it"],
+        )
+        self.assertIsNotNone(domino_chain)
+        self.assertTrue(domino_chain.chain)
+        for node in domino_chain.chain:
+            self.assertNotIn("GEMINI_API_KEY", node.reason)
+            self.assertNotIn("Gemini unavailable", node.reason)
+        self.assertIsNotNone(persona_summary)
 
 
 if __name__ == "__main__":

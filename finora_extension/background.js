@@ -7,7 +7,6 @@ chrome.runtime.onInstalled.addListener(() => {
     portfolio: [],
     selectedSectors: [],
   });
-  console.log("Finora Intelligence v2 installed.");
 });
 
 // Update badge when a message is analysed

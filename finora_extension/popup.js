@@ -54,13 +54,31 @@ async function checkBackendStatus() {
   const badge = document.getElementById("statusBadge");
   const txt   = document.getElementById("statusText");
   try {
-    const res = await fetch(`${apiUrl}/api/health`);
-    const ok  = res.ok && (await res.json()).status === "ok";
+    const res = await fetch(`${apiUrl}/api/system/status`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const status = await res.json();
+    const ok = status.api_status === "ok";
+    const degraded = status.pipeline_ready === false || status.models?.some((model) => model.ready === false);
     if (badge) badge.className = `status-badge ${ok ? "online" : "offline"}`;
-    if (txt)   txt.textContent  = ok ? "Connected" : "Offline";
+    if (txt) {
+      txt.textContent = ok
+        ? degraded
+          ? "Connected (fallback mode)"
+          : status.gpu_enabled
+            ? "Connected (GPU ready)"
+            : "Connected (CPU mode)"
+        : "Offline";
+    }
   } catch (_) {
-    if (badge) badge.className = "status-badge offline";
-    if (txt)   txt.textContent  = "Offline";
+    try {
+      const res = await fetch(`${apiUrl}/api/health`);
+      const ok  = res.ok && (await res.json()).status === "ok";
+      if (badge) badge.className = `status-badge ${ok ? "online" : "offline"}`;
+      if (txt)   txt.textContent  = ok ? "Connected" : "Offline";
+    } catch (_) {
+      if (badge) badge.className = "status-badge offline";
+      if (txt)   txt.textContent  = "Offline";
+    }
   }
 }
 
@@ -184,6 +202,12 @@ function setupAnalysePanel() {
   document.getElementById("scrapeBtn").addEventListener("click", manualScrape);
 }
 
+function getErrorMessage(payload, fallback) {
+  if (payload?.error?.message) return payload.error.message;
+  if (payload?.detail && typeof payload.detail === "string") return payload.detail;
+  return fallback;
+}
+
 async function runAnalysis() {
   const text = document.getElementById("headlineInput").value.trim();
   if (!text) return;
@@ -213,7 +237,7 @@ async function runAnalysis() {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || `HTTP ${res.status}`);
+      throw new Error(getErrorMessage(err, `HTTP ${res.status}`));
     }
 
     lastResult = await res.json();
@@ -322,9 +346,10 @@ async function loadNewsFeed() {
 
   const count = Math.min(50, Math.max(1, appConfig.news_default_count || 15));
   try {
-    const res = await fetch(`${apiUrl}/api/news?count=${count}`);
+    const res = await fetch(`${apiUrl}/api/news/live?count=${count}`);
     if (!res.ok) throw new Error("API error");
-    const items = await res.json();
+    const payload = await res.json();
+    const items = Array.isArray(payload?.items) ? payload.items : [];
 
     if (!items.length) {
       list.innerHTML = `<div class="empty"><div class="empty-icon">📭</div>No news available.</div>`;
@@ -519,7 +544,7 @@ async function saveAndSimulate() {
   if (spinner) spinner.style.display = "block";
 
   try {
-    const res = await fetch(`${apiUrl}/api/portfolio_impact`, {
+    const res = await fetch(`${apiUrl}/api/portfolio/stress`, {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       body:    JSON.stringify({
@@ -537,7 +562,7 @@ async function saveAndSimulate() {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || `HTTP ${res.status}`);
+      throw new Error(getErrorMessage(err, `HTTP ${res.status}`));
     }
 
     const data = await res.json();
@@ -598,8 +623,8 @@ function setupDeepDivePanel() {
       // Pass the current headline as a query param so the webapp can pre-load it
       const text = document.getElementById("headlineInput")?.value?.trim();
       const url  = text
-        ? `${webappUrl}?q=${encodeURIComponent(text)}`
-        : webappUrl;
+        ? `${webappUrl}/event?q=${encodeURIComponent(text)}`
+        : `${webappUrl}/event`;
       chrome.tabs.create({ url });
     });
   }

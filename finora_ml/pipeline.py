@@ -67,10 +67,16 @@ def setup_pipeline():
     from .models.classifier import get_classifier
 
     logger.info("Setting up Finora ML pipeline…")
-    get_sentiment_pipe()
-    get_classifier()
-    get_bge_model()
-    get_chroma_collection()
+    for loader_name, loader in (
+        ("sentiment", get_sentiment_pipe),
+        ("classifier", get_classifier),
+        ("embeddings", get_bge_model),
+        ("vector_store", get_chroma_collection),
+    ):
+        try:
+            loader()
+        except Exception as exc:
+            logger.warning("Pipeline warmup step '%s' failed, fallback mode will be used: %s", loader_name, exc)
 
     try:
         count = seed_from_json(force=FORCE_RESEED_CHROMA)
